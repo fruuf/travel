@@ -1,0 +1,27 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:300);
+@import "./bootstrap/less/bootstrap.less";
+
+@font-family-sans-serif:  'Raleway', Helvetica, Arial, sans-serif;
+@font-family-serif:       Georgia, "Times New Roman", Times, serif;
+// @body-bg: #BB0001;
+@brand-primary: #DC403B;
+// @btn-primary-color: @gray-dark;
+
+.splash {
+  background-image: url("/images/gili.jpeg");
+  background-size: cover;
+  background-position: center center;
+  width: 100vw;
+  height: 30vh;
+  margin: 0 0 5vh 0;
+  color: #fff;
+  text-shadow: 1px 1px 1px @gray-dark;
+}
+
+.feed-user {
+  &.online {
+    h3 {
+      font-weight: bold;
+    }
+  }
+}

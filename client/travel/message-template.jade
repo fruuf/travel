@@ -1,0 +1,7 @@
+h1 Conversations
+.list-group
+  .list-group-item.conversation(ng-repeat="conversation in MessageCtrl.conversations | orderBy:'-updatedAt'", ui-sref="travel.conversation({conversation:conversation._id})")
+    h4
+      span.user(ng-repeat="user in conversation.user") {{user.name}}, 
+      | {{conversation.updatedAt | date:'shortTime'}}
+    p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-3") {{message.content}}

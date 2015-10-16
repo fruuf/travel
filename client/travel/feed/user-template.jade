@@ -1,0 +1,7 @@
+
+h3 {{user.name}}
+p
+  span(ng-if="user.online == true") Online,
+  | {{ user.country }}
+div
+  .btn-xs.btn-primary.btn(ng-click="startConversation()") Message

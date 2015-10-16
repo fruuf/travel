@@ -1,0 +1,6 @@
+p(ng-repeat="message in ConversationCtrl.conversation.message | orderBy:'updatedAt' | limitTo:-10")
+  b {{ConversationCtrl.conversationUser[message.user].name}}:
+  | {{message.content}}
+form(ng-submit="ConversationCtrl.submit()")
+  .row-fluid
+    input.form-control(type="text", ng-model="ConversationCtrl.message")
