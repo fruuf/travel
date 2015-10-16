@@ -53,7 +53,7 @@ app.use (err, req, res, next) ->
 
 server = http.createServer app
 io = socketIo(server)
-server.listen 3000
+server.listen 80
 
 # Load
 controllers = requireAll
