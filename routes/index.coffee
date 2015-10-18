@@ -4,12 +4,10 @@ geoipLite = require "geoip-lite"
 ### GET home page. ###
 
 router.get '/', (req, res, next) ->
-  coords= no
+  coords= []
   geo = geoipLite.lookup req.ip
   if geo
-    coords =
-      lat: geo.ll[0]
-      lon: geo.ll[1]
+    coords = [geo.ll[1], geo.ll[0]]
 
   res.render 'index',
     coords: coords
