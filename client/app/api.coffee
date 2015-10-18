@@ -22,6 +22,13 @@ module.exports = class api
     @socket.on "token", (res) =>
       if res.user
         @login = res.user
+        if navigator.geolocation
+          navigator.geolocation.getCurrentPosition (pos) =>
+            coords = [
+              pos.coords.longitude
+              pos.coords.latitude
+            ]
+            @socket.emit "location", coords
       else
         @login = no
         @$cookies.remove "token"
@@ -38,6 +45,7 @@ module.exports = class api
         oldToken: no
     else
       authActionFire = yes
+
 
   auth: (cb) ->
     authAction = cb

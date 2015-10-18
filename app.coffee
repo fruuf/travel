@@ -5,25 +5,40 @@ cookieParser = require('cookie-parser')
 bodyParser = require('body-parser')
 routes = require('./routes/index')
 http = require 'http'
+https = require "https"
 socketIo = require 'socket.io'
 requireAll = require "require-all"
 mongoose = require "mongoose"
+forceSSL = require 'express-force-ssl'
+fs = require "fs"
 global.Q = require "q"
 _ = require "lodash"
 global.Server = new (require "events").EventEmitter
 global.ObjectId = mongoose.Types.ObjectId
+
+# SSL
+sslOptions =
+  key: fs.readFileSync "./ssl-key.pem"
+  cert: fs.readFileSync "./ssl-cert.pem"
+
+portOptions =
+  http: 80
+  https: 443
+
 # db
 mongoose.connect "mongodb://localhost/travel3"
+
 
 # app
 app = express()
 # view engine setup
 app.set 'views', path.join(__dirname, 'views')
 app.set 'view engine', 'jade'
-app.use logger('dev')
-app.use bodyParser.json()
-app.use bodyParser.urlencoded(extended: false)
-app.use cookieParser()
+# app.use logger('dev')
+# app.use bodyParser.json()
+# app.use bodyParser.urlencoded(extended: false)
+# app.use cookieParser()
+# app.use forceSSL
 app.use express.static(path.join(__dirname, 'public'))
 app.use '/', routes
 # catch 404 and forward to error handler
@@ -32,10 +47,13 @@ app.use (req, res, next) ->
   err.status = 404
   next err
   return
-# error handlers
-# development error handler
-# will print stacktrace
+
+
 if app.get('env') == 'development'
+  portOptions =
+    http: 3000
+    https: 3443
+
   app.use (err, req, res, next) ->
     res.status err.status or 500
     res.render 'error',
@@ -51,10 +69,22 @@ app.use (err, req, res, next) ->
     error: {}
   return
 
-server = http.createServer app
-io = socketIo(server)
-server.listen 80
 
+
+app.set 'forceSSLOptions',
+  # enable301Redirects: true
+  # trustXFPHeader: false
+  httpsPort: portOptions.https
+  # sslRequiredMessage: 'SSL Required.
+
+
+server = http.createServer app
+#serverSecure = https.createServer sslOptions, app
+io = socketIo(server)
+# io = socketIo(serverSecure)
+server.listen portOptions.http
+#serverSecure.listen portOptions.https
+console.log "listen to", portOptions
 # Load
 controllers = requireAll
   dirname: __dirname + '/server/controller'
@@ -74,7 +104,8 @@ userStoreRemove = (socket) ->
     if not (index == -1)
       userStore[socket.user].splice index, 1
       if userStore[socket.user].length == 0
-        Server.emit "user.offline", socket.user
+        Server.emit "user.offline",
+          user: socket.user
       socket.user = no
       yes
   no
@@ -87,7 +118,8 @@ userStoreAdd = (socket, user) ->
   index = userStore[socket.user].indexOf socket
   if index == -1
     if userStore[user].length == 0
-      Server.emit "user.online", user
+      Server.emit "user.online",
+        user: user
     userStore[user].push socket
     if userStore[socket.user].length == 0
       userStore[socket.user]
@@ -125,6 +157,10 @@ io.on 'connection', (socket) ->
   socket.on "disconnect", ->
     userStoreRemove socket
 
+  socket.on "location", (req) ->
+    Server.emit "user.location",
+      user: socket.user
+      coords: req
 
   socket.on 'request', (req) ->
     targetArray = req.target.split "/"

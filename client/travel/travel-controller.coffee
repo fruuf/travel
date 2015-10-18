@@ -14,13 +14,7 @@ module.exports = class TravelController
       if not (@api.login == message.user) and not (@$state.current.name == "travel.conversation")
         toastr.info "New Message"
 
-    if navigator.geolocation
-      navigator.geolocation.getCurrentPosition (pos) =>
-        coords = pos.coords
-        @api.request "user/update",
-          lat: coords.latitude
-          lng: coords.longitude
-          
+
     @$state.go "travel.feed"
 
   logout: ->

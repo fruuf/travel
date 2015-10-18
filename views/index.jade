@@ -14,6 +14,10 @@ html(ng-app="app")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.1/toastr.min.js")
     //script(src="https://cdnjs.cloudflare.com/ajax/libs/restangular/1.5.1/restangular.js")
 
+    script.
+      window.coordsGeoIp = !{JSON.stringify(coords)};
+
+
     script(src="/client/app.js")
     link(href="/client/app.css",rel="stylesheet",type="text/css")
     link(href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.1/toastr.min.css",rel="stylesheet",type="text/css")

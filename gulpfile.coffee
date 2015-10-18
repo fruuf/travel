@@ -5,6 +5,7 @@ ngAnnotate = require "gulp-ng-annotate"
 sourcemaps = require "gulp-sourcemaps"
 jade = require "gulp-jade"
 uglify = require "gulp-uglify"
+uglifycss = require 'gulp-uglifycss'
 nodemon = require "gulp-nodemon"
 watch = require "gulp-watch"
 plumber = require "gulp-plumber"
@@ -36,8 +37,8 @@ gulp.task "scripts", ->
   .pipe rename (path) ->
     path.extname = ".min.js"
  # .pipe ngAnnotate()
- # .pipe uglify()
- # .pipe gulp.dest "./.tmp/public/client"
+  .pipe uglify()
+  .pipe gulp.dest "./public/client"
 
 gulp.task "styles", ->
   gulp.src "./client/*.less"
@@ -45,6 +46,11 @@ gulp.task "styles", ->
   .pipe sourcemaps.init()
   .pipe less()
   .pipe sourcemaps.write()
+  .pipe gulp.dest "./public/client"
+  .pipe rename (path) ->
+    path.extname = ".min.css"
+ # .pipe ngAnnotate()
+  .pipe uglifycss()
   .pipe gulp.dest "./public/client"
 
 

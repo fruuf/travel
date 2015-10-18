@@ -3,26 +3,35 @@ bcrypt = require "bcrypt"
 
 module.exports = class UserController
   constructor: ->
-    Server.on "user.online", (user) ->
-      User.update _id: user,
+    Server.on "user.online", (data) ->
+      User.update _id: data.user,
         online: yes
-      .exec (err, res) ->
+      .exec()
+      .then ->
         User.find {}
-        .exec (err, users) ->
-          Server.send "user.update", users,
-            _id: user
-            online: yes
+        .exec()
+      .then (users) ->
+        Server.send "user.update", users,
+          _id: data.user
+          online: yes
 
 
-    Server.on "user.offline", (user) ->
-      User.update _id: user,
+    Server.on "user.offline", (data) ->
+      User.update _id: data.user,
         online: no
-      .exec (err, res) ->
+      .exec()
+      .then ->
         User.find {}
-        .exec (err, users) ->
-          Server.send "user.update", users,
-            _id: user
-            online: no
+        .exec()
+      .then (users) ->
+        Server.send "user.update", users,
+          _id: data.user
+          online: no
+
+    Server.on "user.location", (data) ->
+      User.update _id: data.user,
+        coords: data.coords
+      .exec()
 
   index: (data, send, user) ->
     if not user
@@ -93,9 +102,21 @@ module.exports = class UserController
   register: (data, send) ->
     salt = bcrypt.genSaltSync(10);
     hash = bcrypt.hashSync(data.password, salt);
+    match = data.email.match /^(.+)@/
+    name = data.email
+    if match
+      name = match[1].replace /[\._-]/g, " "
+        .replace /\s+/g, " "
+        .split " "
+        .map (word) ->
+          word = word.toLowerCase()
+          "#{word.charAt(0).toUpperCase()}#{word.slice 1}"
+        .join " "
+
     User.create
       email: data.email
       password: hash
+      name: name
     , (err, user) ->
       if err
         send

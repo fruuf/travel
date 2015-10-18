@@ -30,13 +30,15 @@ userSchema = Schema
   profession: String
   about: String
   online: Boolean
-  lat: Number
-  lng: Number
+  coords:
+    type: [Number,Number]
+    index: "2d"
 
 userSchema.methods.toJSON = ->
   obj = this.toObject()
   delete obj.password
   delete obj.token
+  delete obj.email
   obj
 
 
