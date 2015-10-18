@@ -180,6 +180,9 @@ io.on 'connection', (socket) ->
     .then (user) ->
       if user
         userStoreAdd socket, user.id
+        console.log "valid token", user.id, req.token
+        #user.admin = yes
+        #user.save()
         socket.emit "token",
           user: user.id
       else

@@ -1,0 +1,12 @@
+h1 Locations
+.input-group
+  input.form-control(type="text", placeholder="name", ng-model="search")
+  .input-group-btn
+    button.btn.btn-primary(ng-click="LocationCtrl.add(search)") Add Location
+.list-group
+  div.list-group-item(ng-repeat="location in LocationCtrl.locationList")
+    h4 {{location.name}}
+    p {{location.address}}
+
+    div
+      .btn-xs.btn.btn-primary(ui-sref=".edit({location: location._id})") Edit

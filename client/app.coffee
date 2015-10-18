@@ -1,10 +1,12 @@
 user = require "./user"
 travel = require "./travel"
+admin = require "./admin"
 app = angular.module "app", [
   "ui.router"
   "ngCookies"
   user
   travel
+  admin
 ]
 
 app.service "api", require "./app/api"

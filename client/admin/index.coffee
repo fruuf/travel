@@ -1,8 +1,9 @@
 admin = angular.module "admin", ["app"]
+module.exports = admin.name
 
 admin.controller "AdminController", require "./admin-controller"
 admin.controller "AdminLocationController", require "./location-controller"
-admin.controller "AdminLocationItemController", require "./location-item-controller"
+admin.controller "AdminLocationEditController", require "./location-edit-controller"
 
 admin.config ($stateProvider) ->
   $stateProvider
@@ -16,13 +17,13 @@ admin.config ($stateProvider) ->
   .state "admin.location",
     url: "/location"
     views:
-      "main@":
+      "content@admin":
         template: require "./location-template"
-        controller: "AdminLocationController as AdminCtrl"
+        controller: "AdminLocationController as LocationCtrl"
 
-  .state "admin.location.item",
-    url: "/:item"
+  .state "admin.location.edit",
+    url: "/:location"
     views:
-      "main@":
-        template: require "./location-item-template"
-        controller: "AdminLocationItemController as AdminCtrl"
+      "content@admin":
+        template: require "./location-edit-template"
+        controller: "AdminLocationEditController as EditCtrl"

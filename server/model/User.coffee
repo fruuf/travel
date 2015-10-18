@@ -30,6 +30,11 @@ userSchema = Schema
   profession: String
   about: String
   online: Boolean
+  location: [
+    type: Schema.Types.ObjectId
+    ref: "Location"
+    index: yes
+  ]
   admin:
     type: Boolean
     default: no
