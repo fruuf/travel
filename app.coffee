@@ -51,10 +51,6 @@ app.use (req, res, next) ->
 
 
 if app.get('env') == 'development'
-  portOptions =
-    http: 3000
-    https: 3443
-
   app.use (err, req, res, next) ->
     res.status err.status or 500
     res.render 'error',
