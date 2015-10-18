@@ -69,7 +69,7 @@ module.exports = class UserController
     if not user
       send err: "auth"
       return
-    console.log "user", data
+    # console.log "user", data
     # access
     User.update
       _id: user
@@ -79,19 +79,19 @@ module.exports = class UserController
       send()
 
   login: (data, send) ->
-    console.log data
+    # console.log data
     token = no
     User.findOne
       email: data.email
     .exec()
     .then (user) ->
-      console.log user
+      # console.log user
       if user and bcrypt.compareSync(data.password, user.password)
         token = randToken.generate 50
         user.token.push
           value: token
         user.save (err, res) ->
-          console.log err, res
+          # console.log err, res
           send
             token: token
       else
