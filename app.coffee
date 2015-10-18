@@ -17,10 +17,11 @@ global.Server = new (require "events").EventEmitter
 global.ObjectId = mongoose.Types.ObjectId
 
 # SSL
+###
 sslOptions =
   key: fs.readFileSync "./ssl-key.pem"
   cert: fs.readFileSync "./ssl-cert.pem"
-
+###
 portOptions =
   http: 80
   https: 443
