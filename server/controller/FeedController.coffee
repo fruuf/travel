@@ -17,12 +17,13 @@ module.exports = class FeedController
           $ne: activeUser._id
       .exec()
       .then (users) ->
+        # console.log users
         for user in users
           feed.push
             type: "user"
             user: user
             distance: distance.calculate activeUser.coords, user.coords
-          # console.log feed
+        console.log feed
         send
           feed: feed
     .then undefined, (err) ->

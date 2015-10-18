@@ -1,18 +1,15 @@
 mongoose = require "mongoose"
 Schema = mongoose.Schema
 locationSchema = Schema
-
-  Tag: [
-    type: Schema.Types.ObjectId
-    ref: "Tag"
-    index: yes
-  ]
   createdAt:
     type: Date
     default: Date.now
   coords:
     type: [Number,Number]
     index: "2d"
+  name: String
+  address: String
+  description: String
 
 locationSchema.methods.toJSON = ->
   obj = this.toObject()

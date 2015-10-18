@@ -30,8 +30,12 @@ userSchema = Schema
   profession: String
   about: String
   online: Boolean
+  admin:
+    type: Boolean
+    default: no
   coords:
     type: [Number,Number]
+    default: []
     index: "2d"
 
 userSchema.methods.toJSON = ->

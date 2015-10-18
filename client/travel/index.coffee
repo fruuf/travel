@@ -6,7 +6,6 @@ travel.controller "TravelUserController", require "./user-controller"
 travel.controller "TravelMessageController", require "./message-controller"
 travel.controller "TravelConversationController", require "./conversation-controller"
 travel.controller "TravelFeedController", require "./feed/feed-controller"
-
 travel.directive "feedUser", require "./feed/user-directive"
 travel.directive "feedItem", require "./feed/item-directive"
 

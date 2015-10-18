@@ -4,8 +4,8 @@ Number.prototype.toRadians = ->
 module.exports =
   calculate: (coordsA, coordsB) ->
     result = no
-    # console.log "distance", coordsA, coordsB
-    if coordsA[0] and coordsA[1] and coordsB[0] and coordsB[1]
+    console.log "distance", coordsA, coordsB
+    if coordsA and coordsB and coordsA[0] and coordsA[1] and coordsB[0] and coordsB[1]
       lat1 = coordsA[1]
       lon1 = coordsA[0]
 
