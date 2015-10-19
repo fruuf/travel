@@ -54,12 +54,16 @@ module.exports = class AdminController
         _id: data.location
       .then (location) ->
         Tag.find
-          "location.ref": ObjectId location._id
-        .exec()
-        .then (tag) ->
-          send
-            location: location
-            tag: tag
+          "location.ref":
+            $ne: location._id
+        .then (tagDisabled) ->
+          Tag.find
+            "location.ref": location._id
+          .then (tagEnabled) ->
+            send
+              location: location
+              tagEnabled: tagEnabled
+              tagDisabled: tagDisabled
 
     .then undefined, (err) ->
       send
@@ -71,9 +75,63 @@ module.exports = class AdminController
       Location.update
         _id: data._id
       , data
-      .exec()
       .then (res) ->
         send()
+
     .then undefined, (err) ->
+      send
+        err: err
+
+  locationAddTag: (data, send, user) ->
+    @_isAdmin user
+    .then ->
+      # console.log "tag", data
+      if not data.name
+        throw new Exception "no name"
+
+      Tag.findOne
+        name: data.name
+      .then (tag) ->
+        if not tag
+          Tag.create
+            name: data.name
+          .then (tag) ->
+            send
+              tag: tag
+        else
+          send
+            err: "exists"
+
+    .then undefined, (err) ->
+      send
+        err: err
+
+  locationSetTag: (data, send, user) ->
+    @_isAdmin user
+    .then ->
+      Location.findOne _id: data.location
+      .then (location) ->
+        if not location
+          send
+            err: "location"
+        else if data.status
+          Tag.update _id: data.tag,
+            $push:
+              location:
+                ref: location._id
+                # coords: location.coords
+                multiplier: 1
+          .then ->
+            send()
+        else
+          Tag.update _id: data.tag,
+            $pull:
+              location:
+                ref: location._id
+          .then ->
+            send()
+
+    .then undefined, (err) ->
+      console.log err
       send
         err: err

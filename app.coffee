@@ -168,6 +168,7 @@ io.on 'connection', (socket) ->
       socket.emit "response",
         id: req.id
         data: data
+      "response send"
     global[controller][action] req.data, response, user
 
   socket.on "token", (req) ->

@@ -1,3 +1,4 @@
+h2 General information about the location
 form.form-horizontal
   .form-group
     label.col-sm-4.control-label Name
@@ -35,3 +36,16 @@ form.form-horizontal
     .col-sm-8.col-sm-offset-4
       a(ui-sref="^").btn.btn-default Cancel
       button.btn.btn-primary(ng-click="EditCtrl.save()") Save
+
+h2 Tags linked to location
+p Linked Tags:
+p
+  span.tag.label.label-primary(ng-repeat="tag in EditCtrl.tagEnabled") {{tag.name}}
+    span.tag-button.glyphicon.glyphicon-remove(ng-click="EditCtrl.setTag(tag, false)")
+.input-group
+  input.form-control(type="text", placeholder="tag", ng-model="tagSearch")
+  .input-group-btn
+    button.btn.btn-primary(ng-click="EditCtrl.addTag(tagSearch)") Add Tag
+.tag-cloud
+  span.tag.label.label-primary(ng-repeat="tag in EditCtrl.tagDisabled | filter: {name: tagSearch} | orderBy:'location.length' | limitTo: 20") {{tag.name}}
+    span.tag-button.glyphicon.glyphicon-plus(ng-click="EditCtrl.setTag(tag, true)")

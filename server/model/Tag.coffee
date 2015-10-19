@@ -6,20 +6,20 @@ tagSchema = Schema
     ref:
       type: Schema.Types.ObjectId
       ref: "User"
-      index: yes
-    pos: Number
-    neg: Number
+      unique: yes
+    count: Number
   ]
   location: [
     ref:
       type: Schema.Types.ObjectId
       ref: "Location"
-      index: yes
-    coords: [Number, Number]
+      unique: yes
+
+    # coords: [Number]
     multiplier:
       type: Number
       min: -1
-      max: 1  
+      max: 1
   ]
   createdAt:
     type: Date
@@ -28,7 +28,7 @@ tagSchema = Schema
 
 tagSchema.methods.toJSON = ->
   obj = this.toObject()
-  delete obj.user
+  # delete obj.user
   # delete obj.token
   obj
 

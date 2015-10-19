@@ -5,7 +5,7 @@ locationSchema = Schema
     type: Date
     default: Date.now
   coords:
-    type: [Number,Number]
+    type: [Number]
     index: "2d"
   name: String
   address: String

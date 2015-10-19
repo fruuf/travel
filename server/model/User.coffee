@@ -33,15 +33,15 @@ userSchema = Schema
   location: [
     type: Schema.Types.ObjectId
     ref: "Location"
-    index: yes
+    unique: yes
   ]
   admin:
     type: Boolean
     default: no
   coords:
-    type: [Number,Number]
-    default: []
-    index: "2d"
+    type: [Number]
+    index: '2d'
+    
 
 userSchema.methods.toJSON = ->
   obj = this.toObject()
