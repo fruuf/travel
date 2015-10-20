@@ -4,8 +4,10 @@ div.list-group-item(ng-if="item.type == 'location'", ui-sref=".location({locatio
   p {{description}}
   p(ng-if="item.distance") {{item.distance.formatted}}
 
-div.list-group-item(ui-sref=".user({user:item.user._id})", ng-if="item.type == 'user'")
-  h4 {{item.user.name}}
+div.list-group-item.user(ui-sref="travel.conversation({user:[item.user._id]})", ng-if="item.type == 'user'")
+  .image(style="background-image:url('/files/{{item.user._id}}.jpg');")
+  p
+    b {{item.user.name}}
   p {{description}}
   p(ng-if="item.user.online == true")
     span.label.label-success Online

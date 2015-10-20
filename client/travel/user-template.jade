@@ -1,11 +1,18 @@
-.fileinput.fileinput-new(data-provides="fileinput")
-  .fileinput-preview.thumbnail(data-trigger="fileinput")
-  div.text-right.btn-group
-    span.btn.btn-primary.btn-file
-      span.fileinput-new Select image
-      span.fileinput-exists Change
-      input(type="file", name="profilePicture", ng-model="UserCtrl.profilePicture")
-    a.btn.btn-default.fileinput-exists(data-dismiss="fileinput") Remove
+//.fileinput.fileinput-new(data-provides="fileinput")
+//  .fileinput-preview.thumbnail(data-trigger="fileinput")
+//  div.text-right.btn-group
+//    span.btn.btn-primary.btn-file
+//      span.fileinput-new Select image
+//      span.fileinput-exists Change
+//    a.btn.btn-default.fileinput-exists(data-dismiss="fileinput") Remove
+
+.profile-picture
+  .preview(style="background-image:url('/files/{{UserCtrl.data._id}}.jpg');")
+  .preview(ngf-background="UserCtrl.profilePicture")
+  .buttons
+    .glyphicon.glyphicon-file(ngf-select, ngf-resize="{width: 600, height: 400, quality: .8}", ng-model="UserCtrl.profilePicture",accept="image/*")
+    .glyphicon.glyphicon-ok(ng-click="UserCtrl.upload(UserCtrl.profilePicture)")
+
 
 form.form-horizontal
   .form-group

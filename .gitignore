@@ -30,3 +30,4 @@ travel.pem
 ssl-key.pem
 ssl-cert.pem
 certrequest.csr
+public/files

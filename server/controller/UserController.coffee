@@ -1,5 +1,7 @@
 randToken = require "rand-token"
 bcrypt = require "bcrypt"
+fs  = require 'fs'
+path = require "path"
 
 module.exports = class UserController
   constructor: ->
@@ -32,6 +34,15 @@ module.exports = class UserController
       User.update _id: data.user,
         coords: data.coords
       .exec()
+
+    Server.on "user.upload", (data) ->
+      filename = path.join process.cwd(), "public/files", "#{data.user}.jpg"
+      console.log filename
+      fs.writeFile filename, data.file.buffer, (err) ->
+        if err
+          console.log('File could not be saved.')
+        else
+          console.log('File saved.');
 
   index: (data, send, user) ->
     if not user

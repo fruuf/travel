@@ -154,6 +154,7 @@ io.on 'connection', (socket) ->
 
   fileUpload = delivery.listen socket
   fileUpload.on "receive.success", (file) ->
+    # console.log "upload", file
     if socket.user
       Server.emit "user.upload",
         file: file

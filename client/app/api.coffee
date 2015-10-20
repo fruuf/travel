@@ -2,12 +2,20 @@ requestStore = {}
 requestCounter = 0
 authActionFire = no
 authAction = no
+delivery = no
 
 module.exports = class api
   constructor: (@$q, $rootScope, @$cookies) ->
     $rootScope.user = @user = {}
     @login = no
     @socket = io()
+    @socket.on 'connect', =>
+      dl = new Delivery @socket
+
+      dl.on 'delivery.connect', (dl) ->
+        console.log "dl", dl
+        delivery = dl
+
     @socket.on "response", (data) ->
       request = requestStore[data.id]
       if data.data.err
@@ -89,3 +97,6 @@ module.exports = class api
         data: data
         id: requestCounter
     deferred.promise
+
+  sendFile: (file) ->
+    delivery.send file
