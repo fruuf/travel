@@ -1,15 +1,24 @@
-.container
-  .row
-    .col-sm-4
-      ul.nav.nav-pills.nav-stacked
-        li
-          a(ui-sref=".feed") Feed
-        li
-          a(ui-sref=".user") Edit profile
-        li
-          a(ui-sref=".message") Messages
-        li(ng-if="user.admin == true")
-          a(ui-sref="admin") Administration
-        li
-          a(ng-click="TravelCtrl.logout()") Logout
-    .col-sm-8(ui-view="content")
+nav#menu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas
+  .container
+    ul.nav.navbar-nav
+      li
+        a(ui-sref=".feed") Feed
+      li
+        a(ui-sref=".user") Edit profile
+      li
+        a(ui-sref=".message") Messages
+      li(ng-if="user.admin == true")
+        a(ui-sref="admin") Administration
+      li
+        a(ng-click="TravelCtrl.logout()") Logout
+
+.navbar.navbar-default.navbar-fixed-top.navbar-travel
+  .navbar-header
+    button.menu.navbar-toggle(data-toggle="offcanvas", data-target="#menu", data-canvas="body")
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    a.navbar-brand.center(ui-sref="travel.feed") Found
+
+
+#main-frame.container(ui-view="content")

@@ -5,34 +5,88 @@
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 // @body-bg: #BB0001;
 @brand-primary: #DC403B;
+
+@navbar-default-color:             #eee;
+@navbar-default-bg:                @brand-primary;
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+
+@navbar-default-link-color:                @navbar-default-color;
+@navbar-default-link-hover-color:          darken(@navbar-default-color, 10%);
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         darken(@navbar-default-color, 10%);
+@navbar-default-link-active-bg:            transparent;
+@navbar-default-link-disabled-color:       darken(@navbar-default-color, 30%);
+@navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               @navbar-default-link-color;
+@navbar-default-brand-hover-color:         @navbar-default-link-hover-color;
+@navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+@navbar-default-toggle-hover-bg:           transparent;
+@navbar-default-toggle-icon-bar-bg:        @navbar-default-link-color;
+@navbar-default-toggle-border-color:       transparent;
+
 // @btn-primary-color: @gray-dark;
-
-.splash {
-  background-image: url("/images/gili.jpeg");
-  background-size: cover;
-  background-position: center center;
-  width: 100vw;
-  height: 30vh;
-  margin: 0 0 5vh 0;
-  color: #fff;
-  text-shadow: 1px 1px 1px @gray-dark;
-}
-
-.feed-user {
-  &.online {
-    h3 {
-      font-weight: bold;
+#travel {
+  .navbar-travel {
+    .navbar-header {
+      //float: left;
+      //padding: 15px;
+      //text-align: center;
+      //width: 100%;
+      //.navbar-brand {
+      //  display: inline-block;
+      //  float: none;
+      //}
+      button {
+        margin: 8px 15px;
+        &.menu {
+          float:left;
+        }
+      }
     }
   }
-}
-.tag {
-  margin: 0 3px;
-  white-space:pre;
-  display: inline-block;
-  .tag-button {
-    margin: 0 0 0 3px;
+
+  .splash {
+    background-image: url("/images/gili.jpeg");
+    background-size: cover;
+    background-position: center center;
+    width: 100vw;
+    height: 30vh;
+    margin: 0 0 5vh 0;
+    color: #fff;
+    text-shadow: 1px 1px 1px @gray-dark;
   }
-}
-.tag-cloud {
-  margin: 0 0 30px 0;
+
+  .feed-user {
+    &.online {
+      h3 {
+        font-weight: bold;
+      }
+    }
+  }
+  .tag {
+    margin: 0 3px;
+    white-space:pre;
+    display: inline-block;
+    .tag-button {
+      margin: 0 0 0 3px;
+    }
+  }
+  .tag-cloud {
+    margin: 0 0 30px 0;
+  }
+  #main-frame {
+    margin-top:70px;
+  }
+  .fileinput {
+    display:block;
+    .fileinput-preview {
+      width: 100%;
+      height: 30vh;
+    }
+
+  }
 }

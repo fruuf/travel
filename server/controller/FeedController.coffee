@@ -213,7 +213,7 @@ module.exports = class FeedController
         feedLocation = feedLocation.sort (a,b) ->
           b.rating - a.rating
 
-        console.log feedLocation
+        # console.log feedLocation
         #console.log "location", (_.pluck feedLocation, "rating")
         #console.log "user", (_.pluck feedUser, "rating")
 
