@@ -69,7 +69,7 @@ module.exports = class api
       console.log "err_timeout"
       deferred.reject
         err: "timeout"
-    , 2000
+    , 10000
 
     requestCounter = requestCounter + 1
     do (requestCounter) =>

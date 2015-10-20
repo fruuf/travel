@@ -3,23 +3,14 @@ Schema = mongoose.Schema
 tagSchema = Schema
   name: String
   user: [
-    ref:
-      type: Schema.Types.ObjectId
-      ref: "User"
-      unique: yes
-    count: Number
+    type: Schema.Types.ObjectId
+    ref: "User"
+    unique: yes
   ]
   location: [
-    ref:
-      type: Schema.Types.ObjectId
-      ref: "Location"
-      unique: yes
-
-    # coords: [Number]
-    multiplier:
-      type: Number
-      min: -1
-      max: 1
+    type: Schema.Types.ObjectId
+    ref: "Location"
+    unique: yes
   ]
   createdAt:
     type: Date

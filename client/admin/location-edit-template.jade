@@ -21,6 +21,11 @@ form.form-horizontal
       input.form-control(type="text", ng-model="EditCtrl.location.description")
 
   .form-group
+    label.col-sm-4.control-label Half Distance (KM)
+    .col-sm-8
+      input.form-control(type="text", ng-model="EditCtrl.location.halfDistance")
+
+  .form-group
     label.col-sm-4.control-label Longitude
     .col-sm-8
       input.form-control(type="text", ng-model="EditCtrl.location.coords[0]")
@@ -47,5 +52,6 @@ p
   .input-group-btn
     button.btn.btn-primary(ng-click="EditCtrl.addTag(tagSearch)") Add Tag
 .tag-cloud
-  span.tag.label.label-primary(ng-repeat="tag in EditCtrl.tagDisabled | filter: {name: tagSearch} | orderBy:'location.length' | limitTo: 20") {{tag.name}}
+  span.tag.label.label-primary(ng-repeat="tag in EditCtrl.tagDisabled | filter: {name: tagSearch} | orderBy:'location.length' | limitTo: 20")
+    | {{tag.name}}
     span.tag-button.glyphicon.glyphicon-plus(ng-click="EditCtrl.setTag(tag, true)")

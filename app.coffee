@@ -13,6 +13,7 @@ forceSSL = require 'express-force-ssl'
 fs = require "fs"
 global.Q = require "q"
 _ = require "lodash"
+delivery = require "delivery"
 global.Server = new (require "events").EventEmitter
 global.ObjectId = mongoose.Types.ObjectId
 
@@ -150,6 +151,13 @@ for name, controller of controllers
 
 io.on 'connection', (socket) ->
   socket.user = no
+
+  fileUpload = delivery.listen socket
+  fileUpload.on "receive.success", (file) ->
+    if socket.user
+      Server.emit "user.upload",
+        file: file
+        user: socket.user
 
   socket.on "disconnect", ->
     userStoreRemove socket

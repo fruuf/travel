@@ -1,1 +1,11 @@
-feed-user(ng-if="item.type == 'user'", item="item")
+div.list-group-item(ng-if="item.type == 'location'", ui-sref=".location({location:item.location._id})")
+  h4 {{item.location.name}}
+  p {{item.location.address}}
+  p {{description}}
+  p(ng-if="item.distance") {{item.distance.formatted}}
+
+div.list-group-item(ui-sref=".user({user:item.user._id})", ng-if="item.type == 'user'")
+  h4 {{item.user.name}}
+  p {{description}}
+  p(ng-if="item.user.online == true")
+    span.label.label-success Online

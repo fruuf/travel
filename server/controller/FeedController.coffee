@@ -1,6 +1,11 @@
 distance = require "../includes/distance"
 _ = require "lodash"
 
+getDistanceRating = (distance, halfDistance = 10) ->
+   base = Math.pow 0.5, (1 / halfDistance)
+   dist = distance / 1000
+   Math.pow base, dist
+
 module.exports = class FeedController
   index: (data, send, user) ->
     if not user
@@ -9,104 +14,228 @@ module.exports = class FeedController
 
     # auth
     feed = []
+    feedUser = []
+    feedLocation = []
 
+    ratingStoreUser =
+      online:
+        max:1
+        rating:1
+      distance:
+        max:1
+        rating: 1
+      location:
+        max:0
+        rating: 3
 
-    # console.log "feed"
+    ratingStoreLocation =
+      tag:
+        max:0
+        rating: 1
+      user:
+        max: 0
+        rating: 1
+      distance:
+        max:1
+        rating: 1
+
     User.findOne _id: user
-    .then (activeUser) ->
-      console.log "activeUser", activeUser
+    .then (userLogin) ->
+      #console.log "activeUser", user
 
       locationStore = {}
       userStore = {}
       getLocationEntry = (id) ->
         if not locationStore[id]
           locationStore[id] =
-            userCount: 0
-            tagCount: 0
+            user: 0
+            tag: 0
             self: no
-            coords: no
+        locationStore[id]
+
 
       getUserEntry = (id) ->
         if not userStore[id]
           userStore[id] =
-            locationCount: 0
-            locationSum: 0
-            online: no
-            coords: no
+            location: 0
+            online: 0
+        userStore[id]
 
-      for location in activeUser.location
+
+
+      for location in userLogin.location
         entry = getLocationEntry location
         entry.self = yes
 
-      User.find
-        coords:
-          $near : activeUser.coords
-          $maxDistance : 5 / 6400
-        #_id:
-        #  $ne: activeUser._id
-        #online: yes
-      .limit 5
-      #.exec()
-      .then (res) ->
-        console.log res
-        res
-      , (err) ->
-        console.log err
-      .then (userNear) ->
-        console.log "userNear", userNear
-        for user in userNear
+      # Needs rework
+      tagDna = {}
+      Tag.find user: userLogin._id
+      .then (tags) ->
+        for tag in tags
+          tagDna[tag._id] = 1 / tags.length
+
+        # nearby online users
+        User.find
+          coords:
+            $nearSphere : userLogin.coords
+            # $maxDistance : 5 / 6400
+          _id:
+            $ne: userLogin._id
+          # online: yes
+        .limit 5
+      .then (userNearList) ->
+        # console.log "userNear", userNearList
+        for user in userNearList
           userEntry = getUserEntry user._id
-          userEntry.online = yes
-          userEntry.coords = user.coords
+          if user.online
+            userEntry.online = 1
 
-
+        # User who like same location
         User.find
           location:
-            $in: activeUser.location
-      .then (userLocation) ->
-        for user in userLocation
+            $in: userLogin.location
+      .then (userLocations) ->
+        # console.log "userLocations", userLocations
+        for user in userLocations
+          # console.log "user", user
           entryUser = getUserEntry user._id
-          entryUser.locationSum = user.location.length
+          #entryUser.locationSum = user.location.length
+          #entryUser.coords = user.coords
+          if user.online
+            entryUser.online = 1
+
           for location in user.location
+            # console.log "location", location
             entryLocation = getLocationEntry location
+            # if users like same location push user ratio
             if entryLocation.self
-              entryUser.locationCount = entryUser.locationCount + 1
+              entryUser.location = entryUser.location + 1
             else
-              entryLocation.userCount = entryLocation.userCount + 1
-              # entryLocation.userSum = entryLocation.userSum + user.location.length
+              entryLocation.user = entryLocation.user + 1
 
+        #console.log "finished"
+        # Find users Tags and rate locations based on DNA
         Tag.find
-          "user.ref": activeUser._id
+          "user": userLogin._id
       .then (userTags) ->
+        # console.log "userTags", userTags
         for tag in userTags
-          tagCount = 0
-          tagCountSum = 0
-          for user in tag.user
-            tagCountSum = tagCountSum + user.count
-            if user.ref == activeUser._id
-              tagCount = user.count
           for location in tag.location
-            entryLocation = getLocationEntry location.ref
-            entryLocation.tagCount = entryLocation.tagCount + (location.multiplier * tagCount / tag.location.length)
+            entryLocation = getLocationEntry location
+            entryLocation.tag = entryLocation.tag + (tagDna[tag._id] / tag.location.length)
 
+        # Find nearby locations that havent been checked
         Location.find
           coords:
-            $nearSphere : activeUser.coords
-            # $maxDistance : 0.1
+            $nearSphere : userLogin.coords
           _id:
-            $nin: activeUser.location
-          # online: yes
-          $limit: 5
-      .then (LocationNear) ->
-        for location in LocationNear
+            $nin: userLogin.location
+        .limit 5
+      .then (locationNear) ->
+        # console.log "locationNear", locationNear
+        for location in locationNear
           entryLocation = getLocationEntry location._id
-          entryLocation.coords = location.coords
-        yes
-      .then ->
+
+
+        # Fill the ids with documents
+        userIdList = Object.keys userStore
+        # _.difference (), [String ]
+        # console.log "userIdList", userIdList, [userLogin._id]
+        User.find
+          _id:
+            $in: userIdList
+            $nin: [userLogin._id]
+      .then (userList) ->
+        for user in userList
+          reason = getUserEntry user._id
+          dist = distance.calculate userLogin.coords, user.coords
+          if dist
+            reason.distance = getDistanceRating dist.distance
+          else
+            reason.distance = 0
+
+
+          if ratingStoreUser.location.max < reason.location
+            ratingStoreUser.location.max = reason.location
+
+          feedUser.push
+            user: user
+            reason: reason
+            distance: dist
+
+        # locationIdList = _.difference (), userLogin.location
+
+        Location.find
+          _id:
+            $in: Object.keys locationStore
+            $nin: userLogin.location
+
+      .then (locationList) ->
+        for location in locationList
+          reason = getLocationEntry location._id
+          dist = distance.calculate userLogin.coords, location.coords
+          # console.log location.distance
+          #console.log location.distance
+          if dist
+            reason.distance = getDistanceRating dist.distance, location.halfDistance
+          else
+            reason.distance = 0
+
+          if ratingStoreLocation.tag.max < reason.tag
+            ratingStoreLocation.tag.max = reason.tag
+
+          if ratingStoreLocation.user.max < reason.user
+            ratingStoreLocation.user.max = reason.user
+
+
+
+          feedLocation.push
+            location: location
+            reason: reason
+            distance: dist
+
+
+
+
+        for item in feedUser
+          item.rating = item.reason.distance * ratingStoreUser.distance.rating
+          + item.reason.online * ratingStoreUser.online.rating
+          + item.reason.location / ratingStoreUser.location.max * ratingStoreUser.location.rating
+
+        feedUser = feedUser.sort (a,b) ->
+          b.rating - a.rating
+
+        for item in feedLocation
+          item.rating = item.reason.distance  * ratingStoreLocation.distance.rating
+          + item.reason.tag / ratingStoreLocation.tag.max * ratingStoreLocation.tag.rating
+          + item.reason.user / ratingStoreLocation.user.max * ratingStoreLocation.user.rating
+
+        feedLocation = feedLocation.sort (a,b) ->
+          b.rating - a.rating
+
+        console.log feedLocation
+        #console.log "location", (_.pluck feedLocation, "rating")
+        #console.log "user", (_.pluck feedUser, "rating")
+
+        for item in feedUser.splice 0, 6
+          feed.push
+            type: "user"
+            user: item.user
+            reason: item.reason
+            distance: item.distance
+
+        for item in feedLocation.splice 0, 6
+          feed.push
+            type: "location"
+            location: item.location
+            reason: item.reason
+            distance: item.distance
+
+        feed = _.shuffle feed
         send
-          user: userStore
-          location: locationStore
+          feed: feed
 
     .then undefined, (err) ->
+      console.log err
       send
         err: err

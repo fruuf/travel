@@ -4,32 +4,28 @@ module.exports = () ->
   template: require "./user-template"
   restrict: "E"
   scope:
-    item: "="
+    user: "="
   controller: ($scope, api, $state) ->
-    $scope.user = $scope.item.user
-    # Update user on websocket
-    $scope.$on "user.update", (event, data) ->
-      # console.log "data", data
-      if data._id == $scope.user._id
-        $scope.user = _.merge $scope.user, data
-        $scope.$digest()
 
-    item = $scope.item
-    user = item.user
-
-    description = []
-    if user.country
-      description.push user.country
-    if user.profession
-      description.push user.profession
-    if item.distance
-      description.push item.distance.formatted
-
-    $scope.description = description.join ", "
-    $scope.startConversation = ->
-      # console.log "statt", $scope.user
-      $state.go "travel.conversation",
-        user: [$scope.user._id]
 
 
   link: (scope, element, attribute) ->
+    # Update user on websocket
+    scope.$on "user.update", (event, data) ->
+      if data._id == scope.user._id
+        scope.user = _.merge scope.user, data
+        scope.$digest()
+
+
+    description = []
+    description.push scope.user.country if scope.user.country
+    description.push scope.user.profession if scope.user.profession
+    description.push scope.user.distance.formatted if scope.user.distance
+
+    scope.description = description.join ", "
+    ###
+    scope.startConversation = ->
+      # console.log "statt", $scope.user
+      $state.go "travel.conversation",
+        user: [$scope.user._id]
+    ###

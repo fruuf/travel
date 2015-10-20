@@ -1,0 +1,5 @@
+div.list-group-item(ui-sref=".location({location:location._id})")
+  h4 {{location.name}}
+  p {{location.address}}
+  p {{location.description}}
+  p(ng-if="location.distance") {{location.distance.formatted}}

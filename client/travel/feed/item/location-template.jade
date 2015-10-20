@@ -1,0 +1,14 @@
+h1 {{LocationCtrl.location.name}}
+p {{LocationCtrl.location.description}}
+p {{LocationCtrl.location.address}}
+button.btn.btn-primary(ng-if="LocationCtrl.status == false", ng-click="LocationCtrl.setStatus(LocationCtrl.location._id, true)") I want to go
+button.btn.btn-default(ng-if="LocationCtrl.status == true", ng-click="LocationCtrl.setStatus(LocationCtrl.location._id, false)") No more interest
+
+h3 Users that want to go
+.list-group
+  .list-group-item(ng-repeat="user in LocationCtrl.user", ui-sref="travel.feed.user({user:user._id})")
+    h4 {{user.name}}
+    p
+      span(ng-if="user.profession") {{user.profession}},
+      span(ng-if="user.country") {{user.country}},
+      span(ng-if="user.about") {{user.about}}

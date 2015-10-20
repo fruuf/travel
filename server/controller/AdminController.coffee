@@ -24,7 +24,6 @@ module.exports = class AdminController
     @_isAdmin user
     .then ->
       Location.find {}
-      .exec()
       .then (locations) ->
         Tag.find {}
         .then (tags) ->
@@ -54,11 +53,11 @@ module.exports = class AdminController
         _id: data.location
       .then (location) ->
         Tag.find
-          "location.ref":
+          "location":
             $ne: location._id
         .then (tagDisabled) ->
           Tag.find
-            "location.ref": location._id
+            "location": location._id
           .then (tagEnabled) ->
             send
               location: location
@@ -117,17 +116,13 @@ module.exports = class AdminController
         else if data.status
           Tag.update _id: data.tag,
             $push:
-              location:
-                ref: location._id
-                # coords: location.coords
-                multiplier: 1
+              location: location._id
           .then ->
             send()
         else
           Tag.update _id: data.tag,
             $pull:
-              location:
-                ref: location._id
+              location: location._id
           .then ->
             send()
 

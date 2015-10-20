@@ -7,6 +7,9 @@ locationSchema = Schema
   coords:
     type: [Number]
     index: "2d"
+  halfDistance:
+    type: Number
+    default: 10
   name: String
   address: String
   description: String
