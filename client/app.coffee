@@ -13,8 +13,6 @@ app = angular.module "app", [
 
 ]
 
-console.log require "./travel/controller"
-
 app.service "api", require "./app/api"
 
 

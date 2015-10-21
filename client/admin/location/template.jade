@@ -4,9 +4,6 @@ h1 Locations
   .input-group-btn
     button.btn.btn-primary(ng-click="LocationCtrl.add(search)") Add Location
 .list-group
-  div.list-group-item(ng-repeat="location in LocationCtrl.locationList")
+  div.list-group-item(ng-repeat="location in LocationCtrl.locations | filter:search", ui-sref=".detail({location: location._id})")
     h4 {{location.name}}
     p {{location.address}}
-
-    div
-      .btn-xs.btn.btn-primary(ui-sref=".edit({location: location._id})") Edit

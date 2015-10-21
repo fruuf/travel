@@ -10,10 +10,5 @@ class UserRegisterController
         toastr.success "Registration successful"
         @$state.go "user.login",
           email: @data.email
-      , (err) ->
-        toastr.error "Invalid credentials"
-
-    else
-      toastr.error "Invalid credentials"
 
 module.exports = ["$state", "api", UserRegisterController]

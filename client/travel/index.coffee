@@ -4,6 +4,7 @@ module.exports = angular.module "travel", [
   (require "./conversation").name
   (require "./profile").name
   (require "./user").name
+  (require "../admin").name
 ]
 .controller "TravelController", require "./controller"
 .config ["$stateProvider", ($stateProvider) ->

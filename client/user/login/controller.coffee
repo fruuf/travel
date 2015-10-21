@@ -16,7 +16,5 @@ class UserLoginController
       .then (data) =>
         if data.token
           @api.token data.token
-      , (err) ->
-        toastr.error "Invalid combination"
 
 module.exports = ["$state", "api", "$cookies", "$stateParams", UserLoginController]

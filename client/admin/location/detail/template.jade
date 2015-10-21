@@ -1,0 +1,57 @@
+h2 General information about the location
+form.form-horizontal
+  .form-group
+    label.col-sm-4.control-label Name
+    .col-sm-8
+      input.form-control(type="text", ng-model="DetailCtrl.location.name")
+
+  .form-group
+    label.col-sm-4.control-label Address
+    .col-sm-8
+      .input-group
+        input.form-control(type="text", ng-model="DetailCtrl.location.address")
+        .input-group-btn
+          button.btn.btn-default(ng-click="DetailCtrl.lookup(DetailCtrl.location.address)") Lookup
+
+
+
+  .form-group
+    label.col-sm-4.control-label Description
+    .col-sm-8
+      input.form-control(type="text", ng-model="DetailCtrl.location.description")
+
+  .form-group
+    label.col-sm-4.control-label Half Distance (KM)
+    .col-sm-8
+      input.form-control(type="text", ng-model="DetailCtrl.location.halfDistance")
+
+  .form-group
+    label.col-sm-4.control-label Longitude
+    .col-sm-8
+      input.form-control(type="text", ng-model="DetailCtrl.location.coords[0]")
+
+  .form-group
+    label.col-sm-4.control-label Latitude
+    .col-sm-8
+      input.form-control(type="text", ng-model="DetailCtrl.location.coords[1]")
+
+  hr
+
+  .form-group
+    .col-sm-8.col-sm-offset-4
+      a(ui-sref="^").btn.btn-default Cancel
+      button.btn.btn-primary(ng-click="DetailCtrl.save()") Save
+
+h2 Tags linked to location
+p Linked Tags:
+p
+  span.tag.label.label-primary(ng-repeat="tag in DetailCtrl.tagEnabled") {{tag.name}}
+    span.tag-button.glyphicon.glyphicon-remove(ng-click="DetailCtrl.setTag(tag, false)")
+.input-group
+  input.form-control(type="text", placeholder="tag", ng-model="tagSearch")
+  .input-group-btn
+    button.btn.btn-primary(ng-click="DetailCtrl.addTag(tagSearch)") Add Tag
+.tag-cloud
+  span.tag.label.label-primary(ng-repeat="tag in DetailCtrl.tagDisabled | filter: {name: tagSearch} | orderBy:'location.length' | limitTo: 20")
+    | {{tag.name}}
+    span.tag-button.glyphicon.glyphicon-plus(ng-click="DetailCtrl.setTag(tag, true)")

@@ -8,7 +8,7 @@ class FeedController
         item.hidden = no
         @feed.push item
 
-    
+
 
   filter: (type) ->
     if @type == type

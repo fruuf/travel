@@ -4,7 +4,7 @@ authActionFire = no
 authAction = no
 delivery = no
 
-module.exports = class api
+class api
   constructor: (@$q, $rootScope, @$cookies) ->
     $rootScope.user = @user = {}
     @login = no
@@ -27,7 +27,7 @@ module.exports = class api
     @socket.on "response", (data) ->
       request = requestStore[data.id]
       if data.err
-        console.error data.err
+        toastr.error data.err
         request.reject data.err
       else
         request.resolve data.data
@@ -80,7 +80,7 @@ module.exports = class api
   request: (target, data = {}) ->
     deferred = @$q.defer()
     timeout = window.setTimeout ->
-      console.log "err_timeout"
+      toastr.error "timeout (10sek)"
       deferred.reject
         err: "timeout"
     , 10000
@@ -106,3 +106,5 @@ module.exports = class api
 
   sendFile: (file) ->
     delivery.send file
+
+module.exports = ["$q", "$rootScope", "$cookies", api]

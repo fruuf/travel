@@ -1,17 +1,17 @@
-module.exports = class LocationController
+class AdminLocationController
   constructor: (@api, @$state) ->
     @locationStore = {}
     @tagStore = {}
     @api.request "admin/location"
     .then (res) =>
       console.log res
-      
-      @locationList = res.location
-      @tagList = res.tag
-      for location in res.location
+
+      @locations = res.locations
+      @tags = res.tags
+      for location in res.locations
         @locationStore[location._id] = location
-      for tag in res.tag
-        @locationStore[tag._id] = tag
+      for tag in res.tags
+        @tagStore[tag._id] = tag
 
 
   add: (name)->
@@ -20,11 +20,10 @@ module.exports = class LocationController
       @api.request "admin/locationAdd",
         name: name
       .then (res) =>
-        @$state.go ".edit",
+        @$state.go ".detail",
           location: res.location._id
         toastr.success "location created"
-      .then undefined, (err) ->
-        console.error err
-
     else
       toastr.error "specify name"
+
+module.exports = ["api", "$state", AdminLocationController]

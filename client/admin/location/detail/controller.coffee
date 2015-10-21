@@ -1,10 +1,9 @@
 _ = require "lodash"
-module.exports = class LocationEditController
+class AdminLocationDetailController
   constructor: (@api, @$state, $stateParams, @$scope) ->
     @tagStore = {}
-
     @geocoder = new google.maps.Geocoder()
-    @api.request "admin/locationEditLoad",
+    @api.request "admin/locationDetail",
       location: $stateParams.location
     .then (res) =>
       console.log res
@@ -31,21 +30,19 @@ module.exports = class LocationEditController
         toastr.error status
 
   save: ->
-    @api.request "admin/locationEditSave", @location
+    @api.request "admin/locationUpdate", @location
     .then (res) =>
       toastr.success "location saved"
 
   addTag: (name) ->
     if name
-      console.log name
       @api.request "admin/locationAddTag",
         name: name
       .then (res) =>
         # console.log res
         @tagDisabled.push res.tag
         # @tagStore[res.tag._id] = res.tag
-      , (err) =>
-        toastr.error "Tag does exist"
+
 
   setTag: (tag, status) ->
     console.log "setTag", tag, status
@@ -64,4 +61,5 @@ module.exports = class LocationEditController
       tag: tag._id
       location: @location._id
       status: status
-    
+
+module.exports = ["api", "$state", "$stateParams", "$scope", AdminLocationDetailController]
