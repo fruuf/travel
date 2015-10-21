@@ -2,13 +2,13 @@ nav#menu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas
   .container
     ul.nav.navbar-nav
       li
-        a(ui-sref=".feed") Feed
+        a(ng-click="TravelCtrl.go('travel.feed')") Feed
       li
-        a(ui-sref=".user") Edit profile
+        a(ng-click="TravelCtrl.go('travel.user')") Edit profile
       li
-        a(ui-sref=".message") Messages
+        a(ng-click="TravelCtrl.go('travel.message')") Messages
       li(ng-if="user.admin == true")
-        a(ui-sref="admin") Administration
+        a(ng-click="TravelCtrl.go('admin')") Administration
       li
         a(ng-click="TravelCtrl.logout()") Logout
 

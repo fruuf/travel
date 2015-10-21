@@ -13,6 +13,7 @@ travel.controller "TravelFeedLocationController", require "./feed/item/location-
 
 travel.directive "feedItem", require "./feed/item-directive"
 
+
 travel.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
   .state "travel",

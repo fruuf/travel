@@ -21,3 +21,7 @@ module.exports = class TravelController
     @api.token()
     toastr.success "Logout successful"
     yes
+
+  go: (state) ->
+    $('.navmenu').offcanvas "hide"
+    @$state.go state
