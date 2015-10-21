@@ -2,136 +2,40 @@ randToken = require "rand-token"
 bcrypt = require "bcrypt"
 fs  = require 'fs'
 path = require "path"
+_ = require "lodash"
+distance = require "../includes/distance"
 
-module.exports = class UserController
-  constructor: ->
-    Server.on "user.online", (data) ->
-      User.update _id: data.user,
-        online: yes
-      .exec()
-      .then ->
-        User.find {}
-        .exec()
-      .then (users) ->
-        Server.send "user.update", users,
-          _id: data.user
-          online: yes
+Server.on "user.online", (data) ->
+  User.update _id: data.user,
+    online: yes
+  .then ->
+    User.find {}
+  .then (users) ->
+    Server.send "user.update", users,
+      _id: data.user
+      online: yes
 
+Server.on "user.offline", (data) ->
+  User.update _id: data.user,
+    online: no
+  .then ->
+    User.find {}
+  .then (users) ->
+    Server.send "user.update", users,
+      _id: data.user
+      online: no
 
-    Server.on "user.offline", (data) ->
-      User.update _id: data.user,
-        online: no
-      .exec()
-      .then ->
-        User.find {}
-        .exec()
-      .then (users) ->
-        Server.send "user.update", users,
-          _id: data.user
-          online: no
-
-    Server.on "user.location", (data) ->
-      User.update _id: data.user,
-        coords: data.coords
-      .exec()
-
-    Server.on "user.upload", (data) ->
-      filename = path.join process.cwd(), "public/files", "#{data.user}.jpg"
-      console.log filename
-      fs.writeFile filename, data.file.buffer, (err) ->
-        if err
-          console.log('File could not be saved.')
-        else
-          console.log('File saved.');
-
-  index: (data, send, user) ->
-    if not user
-      send err: "auth"
-      return
-
-    # access
+module.exports =
+  detail: (req) ->
+    throw new Error "auth" if not req.user
     User.findOne
-      _id: user
+      _id: req.data.user
     .then (user) ->
-      if user
-        send
-          user: user
-      else
-        send
-          err: "notFound"
-
-  findOne: (data, send, user) ->
-    if not user
-      send err: "auth"
-      return
-
-    # access
-    User.findOne
-      _id: data._id
-    .then (user) ->
-      if user
-        send
-          user: user
-      else
-        send
-          err: "notFound"
-
-  update: (data, send, user) ->
-    if not user
-      send err: "auth"
-      return
-    # console.log "user", data
-    # access
-    User.update
-      _id: user
-    , data
-    .exec()
-    .then (res) ->
-      send()
-
-  login: (data, send) ->
-    # console.log data
-    token = no
-    User.findOne
-      email: data.email
-    .exec()
-    .then (user) ->
-      # console.log user
-      if user and bcrypt.compareSync(data.password, user.password)
-        token = randToken.generate 50
-        user.token.push
-          value: token
-        user.save (err, res) ->
-          # console.log err, res
-          send
-            token: token
-      else
-        send
-          err: "login"
-
-
-  register: (data, send) ->
-    salt = bcrypt.genSaltSync(10);
-    hash = bcrypt.hashSync(data.password, salt);
-    match = data.email.match /^(.+)@/
-    name = data.email
-    if match
-      name = match[1].replace /[\._-]/g, " "
-        .replace /\s+/g, " "
-        .split " "
-        .map (word) ->
-          word = word.toLowerCase()
-          "#{word.charAt(0).toUpperCase()}#{word.slice 1}"
-        .join " "
-
-    User.create
-      email: data.email
-      password: hash
-      name: name
-    , (err, user) ->
-      if err
-        send
-          err: err
-      else
-        send
-          user: user
+      intersection = _.intersection req.user.location, user.location
+      Location.find
+        _id:
+          $in: intersection
+      .then (locations) ->
+        user: user
+        locations: locations
+        distance: distance.calculate req.user.coords, user.coords

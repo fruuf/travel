@@ -1,0 +1,6 @@
+.filter.text-center
+  .btn-group
+    button.btn.btn-default(ng-click="FeedCtrl.filter('user')") People
+    button.btn.btn-default(ng-click="FeedCtrl.filter('location')") Places
+.list-group
+  travel-feed-item(ng-repeat="item in FeedCtrl.feed | filter:{hidden:false}", item="item")

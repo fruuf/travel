@@ -41,7 +41,8 @@ userSchema = Schema
   coords:
     type: [Number]
     index: '2d'
-    
+    default: []
+
 
 userSchema.methods.toJSON = ->
   obj = this.toObject()

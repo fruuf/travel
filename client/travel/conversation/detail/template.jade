@@ -1,0 +1,6 @@
+p(ng-repeat="message in DetailCtrl.conversation.message | orderBy:'updatedAt' | limitTo:-10")
+  b {{DetailCtrl.userStore[message.user].name}}:
+  | {{message.content}}
+form(ng-submit="DetailCtrl.submit()")
+  .row-fluid
+    input.form-control(type="text", ng-model="DetailCtrl.message")

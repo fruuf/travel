@@ -1,10 +1,10 @@
-div.list-group-item(ng-if="item.type == 'location'", ui-sref=".location({location:item.location._id})")
+div.list-group-item(ng-if="item.type == 'location'", ui-sref="travel.location.detail({location:item.location._id})")
   h4 {{item.location.name}}
   p {{item.location.address}}
   p {{description}}
   p(ng-if="item.distance") {{item.distance.formatted}}
 
-div.list-group-item.user(ui-sref="travel.conversation({user:[item.user._id]})", ng-if="item.type == 'user'")
+div.list-group-item.user(ui-sref="travel.user.detail({user:[item.user._id]})", ng-if="item.type == 'user'")
   .image(style="background-image:url('/files/{{item.user._id}}.jpg');")
   p
     b {{item.user.name}}

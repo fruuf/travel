@@ -1,0 +1,34 @@
+.profile-picture
+  .preview(style="background-image:url('/files/none.jpg');")
+  .preview(style="background-image:url('/files/{{ProfileCtrl.profile._id}}.jpg');")
+  .preview(ngf-background="ProfileCtrl.profilePicture")
+  .preview(ngf-select, ngf-resize="{width: 600, height: 400, quality: .8}", ng-model="ProfileCtrl.profilePicture",accept="image/*")
+
+
+form.form-horizontal
+  .form-group
+    label.col-sm-4.control-label Name
+    .col-sm-8
+      input.form-control(type="text", ng-model="ProfileCtrl.profile.name")
+
+  .form-group
+    label.col-sm-4.control-label Nationality
+    .col-sm-8
+      input.form-control(type="text", ng-model="ProfileCtrl.profile.country")
+
+  .form-group
+    label.col-sm-4.control-label Profession
+    .col-sm-8
+      input.form-control(type="text", ng-model="ProfileCtrl.profile.profession")
+
+  .form-group
+    label.col-sm-4.control-label About me
+    .col-sm-8
+      textarea.form-control(rows="2", ng-model="ProfileCtrl.profile.about")
+
+  hr
+
+  .form-group
+    .col-sm-8.col-sm-offset-4
+      // a(ui-sref="travel").btn.btn-default Cancel
+      button.btn.btn-primary(ng-click="ProfileCtrl.update()") Save

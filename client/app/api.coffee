@@ -13,13 +13,22 @@ module.exports = class api
       dl = new Delivery @socket
 
       dl.on 'delivery.connect', (dl) ->
-        console.log "dl", dl
         delivery = dl
+
+      token = @$cookies.get "token"
+      if token
+        @socket.emit "token",
+          token: token
+          oldToken: no
+      else
+        authActionFire = yes
+
 
     @socket.on "response", (data) ->
       request = requestStore[data.id]
-      if data.data.err
-        request.reject data.data
+      if data.err
+        console.error data.err
+        request.reject data.err
       else
         request.resolve data.data
 
@@ -46,13 +55,7 @@ module.exports = class api
       else
         authActionFire = yes
 
-    token = @$cookies.get "token"
-    if token
-      @socket.emit "token",
-        token: token
-        oldToken: no
-    else
-      authActionFire = yes
+
 
 
   auth: (cb) ->
@@ -65,7 +68,10 @@ module.exports = class api
 
   token: (token = no) ->
     oldToken = @$cookies.get "token"
-    @$cookies.put "token", token
+    exp = new Date()
+    exp.setDate exp.getDate() + 50
+    @$cookies.put "token", token,
+      expires: exp
     @socket.emit "token",
       oldToken: oldToken
       token: token

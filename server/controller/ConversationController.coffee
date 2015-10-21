@@ -1,79 +1,69 @@
 _ = require "lodash"
 
-module.exports = class ConversationController
-  index: (data, send, user) ->
-    if not user
-      send err:"auth"
-      return
+module.exports =
+  index: (req) ->
+    throw new Error "auth" if not req.user
 
     Conversation.find
-      user: user
+      user: req.user._id
     .populate "user"
-    .exec()
     .then (conversations) ->
-      send
-        conversation: conversations
+      conversations: conversations
 
-  get: (data, send, user) ->
-    if not user
-      send err:"auth"
-      return
+  detail: (req) ->
+    throw new Error "auth" if not req.user
 
-    if (not data.conversation) and data.user
-      data.user.push user
-      users = _.unique data.user
+    if (not req.data.conversation) and req.data.user
+      users = req.data.user.concat (String req.user._id)
+      users = _.unique users
         .map (id) ->
           ObjectId id
-      if users.length == 1
-        send err: "conversationSelf"
-      else
-        Conversation.findOne
-          user:
-            $all: users
-            $size: users.length
-          # "user.length": users.length
-        .populate "user"
-        .exec (err, conversation) ->
-          if conversation
-            send
-              conversation: conversation
-          else
-            Conversation.create
-              user: users
-            , (err, conversation) ->
-              Conversation.findOne _id: conversation._id
-              .populate "user"
-              .exec (err, conversation) ->
-                send
-                  conversation: conversation
-                  err: err
 
-    else if data.conversation
-      Conversation.findOne _id: data.conversation
+      throw new Error "conversation empty" if users.length == 1
+
+      Conversation.findOne
+        user:
+          $all: users
+          $size: users.length
+
       .populate "user"
-      .exec (err, conversation) ->
-        send
+      .then (conversation) ->
+        if conversation
           conversation: conversation
-          err: err
+        else
+          Conversation.create
+            user: users
+          .then (conversation) ->
+            Conversation.findOne _id: conversation._id
+            .populate "user"
+          .then (conversation) ->
+            conversation: conversation
 
-  post: (data, send, user) ->
-    if not user
-      send err: "auth"
-      return
+    else if req.data.conversation
+      Conversation.findOne _id: req.data.conversation
+      .populate "user"
+      .then (conversation) ->
+        conversation: conversation
 
-    Conversation.findOne _id: data.conversation
-    .exec (err, conversation) ->
+    else
+      throw new Error "conversation without params"
+
+  addMessage: (req) ->
+    throw new Error "auth" if not req.user
+
+    Conversation.findOne _id: req.data.conversation
+    .then (conversation) ->
       conversation.message.push
-        user: ObjectId user
-        content: data.content
+        user: ObjectId req.user._id
+        content: req.data.content
       conversation.updatedAt = Date.now()
-      conversation.save (err, conversation) ->
-        Server.send "conversation.update", conversation.user,
-          _id: conversation._id
-          message: [
-            user: ObjectId user
-            content: data.content
-            createdAt: Date.now()
-          ]
-
-        send()
+      conversation.save()
+    .then (conversation) ->
+      Server.send "conversation.update", conversation.user,
+        _id: conversation._id
+        message: [
+          user: ObjectId req.user._id
+          content: req.data.content
+          createdAt: Date.now()
+        ]
+      yes

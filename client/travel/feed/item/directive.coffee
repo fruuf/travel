@@ -1,6 +1,6 @@
 
-module.exports = () ->
-  template: require "./item-template"
+module.exports = ->
+  template: require "./template"
   restrict: "E"
   scope:
     item: "="
@@ -14,7 +14,6 @@ module.exports = () ->
           scope.item.user = _.merge user, data
           scope.$digest()
 
-      console.log scope.item
       description = []
       description.push user.country if user.country
       description.push user.profession if user.profession

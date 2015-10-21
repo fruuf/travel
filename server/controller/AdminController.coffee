@@ -1,6 +1,6 @@
 
 
-module.exports = class AdminController
+module.exports = 
   constructor: ->
     @_adminCache = {}
 

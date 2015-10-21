@@ -1,15 +1,14 @@
-module.exports = class TravelConversationController
+class TravelConversationDetailController
   constructor: (@api, @$stateParams, $scope) ->
-    console.log @$stateParams
-    @conversationUser = {}
-    @api.request "conversation/get",
+    @userStore = {}
+    @api.request "conversation/detail",
       user: @$stateParams.user
       conversation: @$stateParams.conversation
     .then (res) =>
-      console.log res.conversation
+      console.log "conv", res.conversation
       @conversation = res.conversation
       for user in @conversation.user
-        @conversationUser[user._id] = user
+        @userStore[user._id] = user
     @message = ""
 
     $scope.$on "conversation.update", (event, data) =>
@@ -21,6 +20,8 @@ module.exports = class TravelConversationController
     if @message
       message = @message
       @message = ""
-      @api.request "conversation/post",
+      @api.request "conversation/addMessage",
         conversation: @conversation._id
         content: message
+
+module.exports = ["api", "$stateParams", "$scope", TravelConversationDetailController]

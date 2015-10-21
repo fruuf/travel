@@ -4,9 +4,12 @@ nav#menu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas
       li
         a(ng-click="TravelCtrl.go('travel.feed')") Feed
       li
-        a(ng-click="TravelCtrl.go('travel.user')") Edit profile
+        a(ng-click="TravelCtrl.go('travel.location')") Places
       li
-        a(ng-click="TravelCtrl.go('travel.message')") Messages
+        a(ng-click="TravelCtrl.go('travel.conversation')") Messages
+      li
+        a(ng-click="TravelCtrl.go('travel.profile')") Edit profile
+
       li(ng-if="user.admin == true")
         a(ng-click="TravelCtrl.go('admin')") Administration
       li
@@ -18,7 +21,7 @@ nav#menu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas
       span.icon-bar
       span.icon-bar
       span.icon-bar
-    a.navbar-brand.center(ui-sref="travel.feed") Found
+    a.navbar-brand.center(ui-sref="travel.feed") {{TravelCtrl.profile.name}}
 
 
 #main-frame.container(ui-view="content")

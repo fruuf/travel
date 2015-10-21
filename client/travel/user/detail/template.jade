@@ -1,0 +1,13 @@
+h1 {{DetailCtrl.user.name}}
+p {{DetailCtrl.user.description}}
+p {{DetailCtrl.user.about}}
+p(ng-if="DetailCtrl.user.online == true")
+  span.label.label-success Online
+button.btn.btn-primary(ui-sref="travel.conversation.detail({user: [DetailCtrl.user._id]})") Message
+
+h3 Places you share
+.list-group
+  .list-group-item(ui-sref=".detail({location:location._id})", ng-repeat="location in DetailCtrl.locations")
+    h4 {{ocation.name}}
+    p {{location.address}}
+    p {{location.description}}

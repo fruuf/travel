@@ -1,7 +1,0 @@
-div.list-group-item(ui-sref=".user({user:user._id})")
-  h4 {{user.name}}
-  p {{description}}
-  p(ng-if="user.online == true")
-    span.label.label-success Online
-  //div
-  //  .btn-xs.btn(ng-click="startConversation()", ng-class="{'btn-primary': user.online, 'btn-default':user.online == false}") Message

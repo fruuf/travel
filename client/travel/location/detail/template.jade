@@ -1,0 +1,14 @@
+h1 {{DetailCtrl.location.name}}
+p {{DetailCtrl.location.description}}
+p {{DetailCtrl.location.address}}
+button.btn.btn-primary(ng-if="DetailCtrl.status == false", ng-click="DetailCtrl.setStatus(true)") I want to go
+button.btn.btn-default(ng-if="DetailCtrl.status == true", ng-click="DetailCtrl.setStatus(false)") No more interest
+
+h3 Users that want to go
+.list-group
+  .list-group-item(ng-repeat="user in DetailCtrl.users", ui-sref="travel.user.detail({user:user._id})")
+    h4 {{user.name}}
+    p
+      span(ng-if="user.profession") {{user.profession}},
+      span(ng-if="user.country") {{user.country}},
+      span(ng-if="user.about") {{user.about}}

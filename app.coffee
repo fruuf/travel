@@ -145,9 +145,6 @@ console.log "models", Object.keys models
 for name, model of models
   global[name] = model
 
-for name, controller of controllers
-  global[name] = new controller()
-
 
 io.on 'connection', (socket) ->
   socket.user = no
@@ -171,14 +168,32 @@ io.on 'connection', (socket) ->
   socket.on 'request', (req) ->
     targetArray = req.target.split "/"
     controller = "#{targetArray[0][0].toUpperCase() + targetArray[0].slice(1)}Controller"
-    action = targetArray[1] or "index"
-    user = socket.user
-    response = (data = {}) ->
+    action = (targetArray[1] or "index").replace "_", ""
+    deferred = Q.defer()
+
+    controllerAction = controllers[controller][action]
+    deferred.promise.then controllerAction
+    .then (data) ->
       socket.emit "response",
         id: req.id
         data: data
-      "response send"
-    global[controller][action] req.data, response, user
+    , (err) ->
+      console.log err
+      socket.emit "response",
+        id: req.id
+        err: err.message
+        
+
+    if socket.user
+      User.findOne _id: socket.user
+      .then (user) ->
+        deferred.resolve
+          user: user
+          data: req.data
+    else
+      deferred.resolve
+        user: null
+        data: req.data
 
   socket.on "token", (req) ->
     User.findOne
