@@ -5,10 +5,9 @@ class TravelProfileController
       @profile = res.profile
 
   update: ->
-    if @profilePicture
-      @api.sendFile @profilePicture
     @api.request "profile/update", @profile
     .then (res) =>
+      @profile = res.profile
       toastr.success "Update successful"
 
 module.exports = ["api", "$scope", TravelProfileController]

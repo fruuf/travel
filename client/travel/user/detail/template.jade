@@ -7,7 +7,7 @@ button.btn.btn-primary(ui-sref="travel.conversation.detail({user: [DetailCtrl.us
 
 h3 Places you share
 .list-group
-  .list-group-item(ui-sref=".detail({location:location._id})", ng-repeat="location in DetailCtrl.locations")
+  .list-group-item(ui-sref="travel.location.detail({location:location._id})", ng-repeat="location in DetailCtrl.locations")
     h4 {{ocation.name}}
     p {{location.address}}
     p {{location.description}}

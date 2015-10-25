@@ -7,10 +7,10 @@ class TravelUserDetailController
       @locations = res.locations
       @user = res.user
       description = []
-      description.push res.user.country if user.country
-      description.push res.user.profession if user.profession
+      description.push res.user.country if res.user.country
+      description.push res.user.profession if res.user.profession
       description.push res.distance.formatted if res.distance
-      @user.description = description
+      @user.description = description.join ", "
 
 
     $scope.$on "user.update", (event, data) =>

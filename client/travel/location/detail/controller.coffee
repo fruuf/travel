@@ -8,11 +8,10 @@ class TravelLocationDetailController
       @status = res.status
 
   setStatus: (status) ->
-    @api.request "location/setStatus",
+    @api.request "location/status",
       location: @location._id
       status: status
     .then (res) =>
       @status = status
 
 module.exports = ["api","$stateParams", TravelLocationDetailController]
-console.log TravelLocationDetailController

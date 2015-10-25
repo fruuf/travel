@@ -6,7 +6,6 @@ bodyParser = require('body-parser')
 routes = require('./routes/index')
 http = require 'http'
 https = require "https"
-socketIo = require 'socket.io'
 requireAll = require "require-all"
 mongoose = require "mongoose"
 forceSSL = require 'express-force-ssl'
@@ -14,8 +13,10 @@ fs = require "fs"
 global.Q = require "q"
 _ = require "lodash"
 delivery = require "delivery"
-global.Server = new (require "events").EventEmitter
+
 global.ObjectId = mongoose.Types.ObjectId
+global.toObject = (obj) ->
+  obj.map (item) -> item.toObject()
 
 # SSL
 ###
@@ -78,77 +79,23 @@ app.set 'forceSSLOptions',
 
 server = http.createServer app
 #serverSecure = https.createServer sslOptions, app
-io = socketIo(server)
+global.Api = (require "api") server
 # io = socketIo(serverSecure)
 server.listen portOptions.http
 #serverSecure.listen portOptions.https
 console.log "listen to", portOptions
-# Load
-controllers = requireAll
-  dirname: __dirname + '/server/controller'
-  filter: /(.+Controller)\.coffee$/
+
 
 models = requireAll
-  dirname: __dirname + '/server/model'
+  dirname: __dirname + '/server/models'
   filter: /(.+)\.coffee$/
-
-
-
-userStore = {}
-
-userStoreRemove = (socket) ->
-  if socket.user
-    index = userStore[socket.user].indexOf socket
-    if not (index == -1)
-      userStore[socket.user].splice index, 1
-      if userStore[socket.user].length == 0
-        Server.emit "user.offline",
-          user: socket.user
-      socket.user = no
-      yes
-  no
-
-userStoreAdd = (socket, user) ->
-  if not userStore[user]
-    userStore[user] = []
-
-  socket.user = user
-  index = userStore[socket.user].indexOf socket
-  if index == -1
-    if userStore[user].length == 0
-      Server.emit "user.online",
-        user: user
-    userStore[user].push socket
-    if userStore[socket.user].length == 0
-      userStore[socket.user]
-    yes
-  no
-
-
-global.Server.send  = (type, users, data = {}) ->
-  if not _.isArray users
-    users = [users]
-
-  for user in users
-    if user._id
-      user = user._id
-
-    sockets = userStore[user] or []
-    for socket in sockets
-      socket.emit "server",
-        type: type
-        data: data
-
-console.log "controllers", Object.keys controllers
-console.log "models", Object.keys models
 
 for name, model of models
   global[name] = model
 
+require "./server"
 
-io.on 'connection', (socket) ->
-  socket.user = no
-
+###
   fileUpload = delivery.listen socket
   fileUpload.on "receive.success", (file) ->
     # console.log "upload", file
@@ -156,69 +103,4 @@ io.on 'connection', (socket) ->
       Server.emit "user.upload",
         file: file
         user: socket.user
-
-  socket.on "disconnect", ->
-    userStoreRemove socket
-
-  socket.on "location", (req) ->
-    Server.emit "user.location",
-      user: socket.user
-      coords: req
-
-  socket.on 'request', (req) ->
-    targetArray = req.target.split "/"
-    controller = "#{targetArray[0][0].toUpperCase() + targetArray[0].slice(1)}Controller"
-    action = (targetArray[1] or "index").replace "_", ""
-    deferred = Q.defer()
-
-    controllerAction = controllers[controller][action]
-    deferred.promise.then controllerAction
-    .then (data) ->
-      socket.emit "response",
-        id: req.id
-        data: data
-    , (err) ->
-      console.log err
-      socket.emit "response",
-        id: req.id
-        err: err.message
-        
-
-    if socket.user
-      User.findOne _id: socket.user
-      .then (user) ->
-        deferred.resolve
-          user: user
-          data: req.data
-    else
-      deferred.resolve
-        user: null
-        data: req.data
-
-  socket.on "token", (req) ->
-    User.findOne
-      "token.value": req.token
-    .exec()
-    .then (user) ->
-      if user
-        userStoreAdd socket, user.id
-        console.log "valid token", user.id, req.token
-        #user.admin = yes
-        #user.save()
-        socket.emit "token",
-          user: user.id
-      else
-        userStoreRemove socket
-        socket.emit "token",
-          err:"err_token"
-
-      if req.oldToken
-        User.update
-            "token.value": req.oldToken
-          ,
-            $pull:
-              'token':
-                value: req.oldToken
-        .exec()
-        .then (res) ->
-          console.log "rem_token", req.oldToken
+###

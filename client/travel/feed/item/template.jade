@@ -5,7 +5,7 @@ div.list-group-item(ng-if="item.type == 'location'", ui-sref="travel.location.de
   p(ng-if="item.distance") {{item.distance.formatted}}
 
 div.list-group-item.user(ui-sref="travel.user.detail({user:[item.user._id]})", ng-if="item.type == 'user'")
-  .image(style="background-image:url('/files/{{item.user._id}}.jpg');")
+  .image(ng-if="item.user.image", style="background-image:url('{{item.user.image.large}}');")
   p
     b {{item.user.name}}
   p {{description}}

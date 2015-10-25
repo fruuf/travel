@@ -1,3 +1,4 @@
+Api = require "api"
 class UserLoginController
   constructor: (@$state, @api, @$cookies, $stateParams) ->
     @data = {}
@@ -14,7 +15,7 @@ class UserLoginController
     if @data.email and @data.password
       @api.request "profile/login", @data
       .then (data) =>
-        if data.token
-          @api.token data.token
+        Api.setToken data.token
+        @$state.go "travel.feed"
 
 module.exports = ["$state", "api", "$cookies", "$stateParams", UserLoginController]

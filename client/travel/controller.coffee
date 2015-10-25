@@ -1,4 +1,5 @@
 _ = require "lodash"
+Api = require "api"
 
 class TravelController
   constructor: (@$state, @api, $scope) ->
@@ -15,7 +16,8 @@ class TravelController
 
 
   logout: ->
-    @api.token()
+    Api.setToken()
+    @$state.go "user.login"
     toastr.success "Logout successful"
     yes
 

@@ -17,7 +17,7 @@ class AdminLocationController
   add: (name)->
     if name
       console.log "firee"
-      @api.request "admin/locationAdd",
+      @api.request "admin/location/add",
         name: name
       .then (res) =>
         @$state.go ".detail",

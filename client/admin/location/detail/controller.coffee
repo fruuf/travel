@@ -3,7 +3,7 @@ class AdminLocationDetailController
   constructor: (@api, @$state, $stateParams, @$scope) ->
     @tagStore = {}
     @geocoder = new google.maps.Geocoder()
-    @api.request "admin/locationDetail",
+    @api.request "admin/location/detail",
       location: $stateParams.location
     .then (res) =>
       console.log res
@@ -30,13 +30,13 @@ class AdminLocationDetailController
         toastr.error status
 
   save: ->
-    @api.request "admin/locationUpdate", @location
+    @api.request "admin/location/update", @location
     .then (res) =>
       toastr.success "location saved"
 
   addTag: (name) ->
     if name
-      @api.request "admin/locationAddTag",
+      @api.request "admin/tag/add",
         name: name
       .then (res) =>
         # console.log res
@@ -57,7 +57,7 @@ class AdminLocationDetailController
       @tagEnabled.splice index, 1
       @tagDisabled.push tag
 
-    @api.request "admin/locationSetTag",
+    @api.request "admin/tag/location",
       tag: tag._id
       location: @location._id
       status: status

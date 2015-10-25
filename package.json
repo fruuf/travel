@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "api": "git+ssh://git@github.com:fruuf/api",
     "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
     "browserify": "^11.2.0",
@@ -43,6 +44,7 @@
     "require-all": "^1.1.0",
     "serve-favicon": "~2.3.0",
     "serve-static": "^1.10.0",
+    "sharp": "^0.11.3",
     "socket.io": "^1.3.7"
   }
 }

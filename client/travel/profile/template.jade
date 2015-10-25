@@ -1,8 +1,8 @@
 .profile-picture
   .preview(style="background-image:url('/files/none.jpg');")
-  .preview(style="background-image:url('/files/{{ProfileCtrl.profile._id}}.jpg');")
-  .preview(ngf-background="ProfileCtrl.profilePicture")
-  .preview(ngf-select, ngf-resize="{width: 600, height: 400, quality: .8}", ng-model="ProfileCtrl.profilePicture",accept="image/*")
+  .preview(ng-if="ProfileCtrl.profile.image", style="background-image:url('{{ProfileCtrl.profile.image.large}}');")
+  .preview(ngf-background="ProfileCtrl.profile.file")
+  .preview(ngf-select, ng-model="ProfileCtrl.profile.file",accept="image/*")
 
 
 form.form-horizontal

@@ -35,6 +35,10 @@ userSchema = Schema
     ref: "Location"
     unique: yes
   ]
+  image:
+    small: String
+    medium: String
+    large: String
   admin:
     type: Boolean
     default: no

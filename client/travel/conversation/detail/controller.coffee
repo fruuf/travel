@@ -5,13 +5,12 @@ class TravelConversationDetailController
       user: @$stateParams.user
       conversation: @$stateParams.conversation
     .then (res) =>
-      console.log "conv", res.conversation
       @conversation = res.conversation
       for user in @conversation.user
         @userStore[user._id] = user
     @message = ""
 
-    $scope.$on "conversation.update", (event, data) =>
+    $scope.$on "conversation/update", (event, data) =>
       if @conversation._id == data._id
         @conversation.message = @conversation.message.concat data.message
         $scope.$digest()
@@ -20,7 +19,7 @@ class TravelConversationDetailController
     if @message
       message = @message
       @message = ""
-      @api.request "conversation/addMessage",
+      @api.request "conversation/message/add",
         conversation: @conversation._id
         content: message
 

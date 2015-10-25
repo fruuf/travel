@@ -9,7 +9,7 @@ module.exports = ->
     if scope.item.type == "user"
       user = scope.item.user
 
-      scope.$on "user.update", (event, data) ->
+      scope.$on "user/update", (event, data) ->
         if data._id == user._id
           scope.item.user = _.merge user, data
           scope.$digest()
