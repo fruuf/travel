@@ -6,7 +6,6 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "api": "git+ssh://git@github.com:fruuf/api",
     "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
     "browserify": "^11.2.0",
@@ -38,10 +37,12 @@
     "lodash": "^3.10.1",
     "mongoose": "^4.1.11",
     "morgan": "~1.6.1",
+    "mysql": "^2.9.0",
     "nodemon": "^1.7.1",
     "q": "^1.4.1",
     "rand-token": "^0.2.1",
     "require-all": "^1.1.0",
+    "sequelize": "^3.12.2",
     "serve-favicon": "~2.3.0",
     "serve-static": "^1.10.0",
     "sharp": "^0.11.3",
