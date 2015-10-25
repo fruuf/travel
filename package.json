@@ -6,7 +6,6 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    // "api": "git+ssh://git@github.com:fruuf/api",
     "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
     "browserify": "^11.2.0",
