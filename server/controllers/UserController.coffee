@@ -3,7 +3,7 @@ bcrypt = require "bcrypt"
 fs  = require 'fs'
 path = require "path"
 _ = require "lodash"
-distance = require "../includes/distance"
+distanceModule = require "../modules/distance"
 api = new Api "user"
 
 
@@ -43,7 +43,7 @@ api.action "detail", (data, auth) ->
     .then (locations) ->
       user: user.toObject()
       locations: toObject locations
-      distance: distance.calculate auth.coords, user.coords
+      distance: distanceModule.calculate auth.coords, user.coords
 
 api.filter "detail",
   user:

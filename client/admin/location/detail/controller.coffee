@@ -32,6 +32,7 @@ class AdminLocationDetailController
   save: ->
     @api.request "admin/location/update", @location
     .then (res) =>
+      @location = res.location
       toastr.success "location saved"
 
   addTag: (name) ->

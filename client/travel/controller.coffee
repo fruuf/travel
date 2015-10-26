@@ -6,18 +6,16 @@ class TravelController
     @api.request "profile"
     .then (res) =>
       @profile = res.profile
-      if @profile.name == "New Profile"
-        @$state.go "travel.profile"
 
-    $scope.$on "conversation.update", (event, conversation) =>
+    $scope.$on "conversation/update", (event, conversation) =>
       message = conversation.message[0]
-      if not (@api.login == message.user) and not (@$state.current.name == "travel.conversation")
+      if not (@profile._id == message.user) and not (@$state.current.name == "travel.conversation")
         toastr.info "New Message"
 
 
   logout: ->
     Api.setToken()
-    @$state.go "user.login"
+    @$state.go "user"
     toastr.success "Logout successful"
     yes
 

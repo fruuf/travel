@@ -1,5 +1,11 @@
+imageModule = require "../modules/image"
 api = new Api "admin"
 
+api.action "auth", (data, auth) ->
+  if auth?.admin
+    auth: auth._id
+  else
+    auth: no
 
 api.action "location", (data, auth) ->
   throw new Error "auth" if not auth?.admin
@@ -36,11 +42,26 @@ api.action "location/detail", (data, auth) ->
 
 api.action "location/update", (data, auth) ->
   throw new Error "auth" if not auth?.admin
-  Location.update
-    _id: data._id
-  , data
+  delete data.image
+  Location.findOne _id: data._id
+  .then (location) ->
+    console.log data
+    if data.file
+      if location.image
+        imageModule.remove location.image
+      imageModule.save data.file
+    else
+      no
+  .then (image) ->
+    if image
+      data.image = image
+    Location.update
+      _id: data._id
+    , data
   .then (res) ->
-    yes
+    Location.findOne _id: data._id
+  .then (location) ->
+    location: location
 
 
 

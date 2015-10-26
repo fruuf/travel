@@ -1,14 +1,33 @@
+Api = require "api"
+
 class UserRegisterController
-  constructor: (@$state, @api) ->
-    @data = {}
+  constructor: (@$state, @api, $stateParams) ->
+    @email = $stateParams.email
+    @$state.go "user" if not @email
+    @name = @email
+    match = @email.match /^(.+)@/
+    if match
+      @name = match[1].replace /[\._-]/g, " "
+        .replace /\s+/g, " "
+        .split " "
+        .map (word) ->
+          word = word.toLowerCase()
+          "#{word.charAt(0).toUpperCase()}#{word.slice 1}"
+        .join " "
 
-  register: ->
-    if @data.email and @data.password and @data.password == @data.passwordRepeat
-      @api.request "profile/register", @data
+  continue: ->
+    if @email and @password and @password == @passwordRepeat
+      @api.request "profile/register",
+        email: @email
+        password: @password
+        name: @name
+        file: @file
       .then (data) =>
+        if data.token
+          Api.setToken data.token
+          @$state.go "travel.feed"
+    else
+      toastr.error "your passwords dont match"
+      @passwordRepeat = ""
 
-        toastr.success "Registration successful"
-        @$state.go "user.login",
-          email: @data.email
-
-module.exports = ["$state", "api", UserRegisterController]
+module.exports = ["$state", "api", "$stateParams", UserRegisterController]

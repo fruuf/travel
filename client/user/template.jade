@@ -1,0 +1,10 @@
+extends ./splash
+block content
+
+  form
+    .form-group
+      label your email address
+      .input-group
+        input.form-control(type="email", placeholder="email", ng-model="UserCtrl.email", required)
+        .input-group-btn
+          button.btn.btn-primary(ng-click="UserCtrl.continue()") Go

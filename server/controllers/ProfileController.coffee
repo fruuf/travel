@@ -1,9 +1,18 @@
 randToken = require "rand-token"
 bcrypt = require "bcrypt"
-fs  = require "fs"
 path = require "path"
 api = new Api "profile"
-sharp = require 'sharp'
+q = require "q"
+imageModule = require "../modules/image"
+
+###
+geoipLite = require "geoip-lite"
+coords= []
+geo = geoipLite.lookup req.ip
+if geo
+  coords = [geo.ll[1], geo.ll[0]]
+###
+
 
 
 api.action "", (data, auth) ->
@@ -21,70 +30,67 @@ api.action "", (data, auth) ->
 
 api.action "auth", (data, auth) ->
   if auth
+    email: auth.email
     auth: auth._id
+  else if data.email
+    User.findOne email: data.email
+    .then (user) ->
+      if user
+        auth: no
+        email: user.email
+      else
+        auth: no
+        email: no
   else
     auth: no
+    email: no
+
+
 
 
 api.action "update", (data, auth) ->
   throw new Error "auth" if not auth
-
+  delete data.admin
+  delete data.image
+  image = no
   if data.file
-    imagePath = path.join process.cwd(), "public"
-    nameSmall = "/files/#{auth._id}_small.jpeg"
-    nameMedium = "/files/#{auth._id}_medium.jpeg"
-    nameLarge = "/files/#{auth._id}_large.jpeg"
+    if auth.image
+      imageModule.remove auth.image
+    image = imageModule.save data.file
 
-    data.image =
-      small: nameSmall
-      medium: nameMedium
-      large: nameLarge
-
-    image = sharp data.file
-    .jpeg()
-    .quality 90
-
-    image
-    .resize 200, 200
-    .toFile "#{imagePath}#{nameSmall}"
-
-    image
-    .resize 400, 400
-    .toFile "#{imagePath}#{nameMedium}"
-
-    image
-    .resize 600, 600
-    .toFile "#{imagePath}#{nameLarge}"
-
-  User.update _id: auth._id, data
+  q image
+  .then (image) ->
+    if image
+      data.image = image
+    User.update _id: auth._id, data
   .then (res) ->
     User.findOne _id: auth._id
   .then (profile) ->
     profile: profile
 
-api.action "register", (data, auth) ->
+api.action "register", (data) ->
+  if not data.name or not data.file or not data.password or not data.email
+    throw new Error "information missing"
   salt = bcrypt.genSaltSync(10)
   hash = bcrypt.hashSync(data.password, salt)
-  ###
-  match = req.data.email.match /^(.+)@/
-  name = req.data.email
-  if match
-    name = match[1].replace /[\._-]/g, " "
-      .replace /\s+/g, " "
-      .split " "
-      .map (word) ->
-        word = word.toLowerCase()
-        "#{word.charAt(0).toUpperCase()}#{word.slice 1}"
-      .join " "
-  ###
+  token = Api.generateToken()
 
-  name = "New Profile"
-  User.create
-    email: data.email
-    password: hash
-    name: name
+  imageModule.save data.file
+  .then (image) ->
+
+    User.create
+      email: data.email
+      password: hash
+      name: data.name
+      image: image
+
   .then (user) ->
-    profile: user
+
+    user.token.push
+      value: token
+    user.save()
+  .then ->
+    token: token
 
 api.action "login", (data) ->
   User.findOne

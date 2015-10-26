@@ -14,6 +14,10 @@ locationSchema = Schema
   name: String
   address: String
   description: String
+  image:
+    small: String
+    medium: String
+    large: String
 
 locationSchema.methods.toJSON = ->
   obj = this.toObject()

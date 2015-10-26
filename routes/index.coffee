@@ -1,15 +1,14 @@
-express = require('express')
+express = require "express"
 router = express.Router()
-geoipLite = require "geoip-lite"
+
+config = require "../config"
 ### GET home page. ###
 
 router.get '/', (req, res, next) ->
-  coords= []
-  geo = geoipLite.lookup req.ip
-  if geo
-    coords = [geo.ll[1], geo.ll[0]]
+  template = if config.development then "index" else "production"
+  res.render template
 
-  res.render 'index',
-    coords: coords
-  return
+router.get "/admin", (req, res, next) ->
+  res.render "admin"
+
 module.exports = router

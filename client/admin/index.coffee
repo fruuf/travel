@@ -1,6 +1,8 @@
 module.exports = angular.module "admin", [
   (require "./location").name
+  (require "./denied").name
 ]
+
 .controller "AdminController", require "./controller"
 .config ["$stateProvider", ($stateProvider) ->
   $stateProvider

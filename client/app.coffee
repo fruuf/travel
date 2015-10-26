@@ -1,36 +1,53 @@
-admin = require "./admin"
 Api = require "api"
 #fileread = require "./app/fileread"
-app = angular.module "app", [
+module.exports = angular.module "app", [
   "ui.router"
   "ngCookies"
-  "ui.bootstrap"
   'ngFileUpload'
-  # 'ngImgCrop'
   (require "./user").name
   (require "./travel").name
-  #admin
-  #fileread
 ]
 
 
-app.factory "api", ["$q", ($q) ->
+.factory "api", ["$q", "$rootScope", "$state", ($q, $rootScope, $state) ->
+  $rootScope.loading = no
   new class AngularApi extends Api
     request: (action, data = {}) ->
-      $q (resolve, reject) =>
+      $rootScope.loading = yes
+      promise = $q (resolve, reject) =>
         super action, data
         .then resolve, reject
       .catch (err) ->
-        toastr.error err.message
+        if err.message == "auth"
+          $state.go "user"
+        else
+          toastr.error err.message
+      promise.finally ->
+        $rootScope.loading = no
+      promise
+]
+.controller "IndexController", ["$state", "api", class IndexController
+  constructor: ($state, api) ->
+    api.request "profile/auth"
+    .then (data) ->
+      if data.auth
+        $state.go "travel.feed"
+      else
+        $state.go "user"
+]
+.config ["$stateProvider", "$urlRouterProvider", ($stateProvider, $urlRouterProvider) ->
+  $urlRouterProvider.otherwise "/index"
+  $stateProvider
+  .state "index",
+    url: "/index"
+    views:
+      "main@":
+        template: require "./template"
+        controller: "IndexController as IndexCtrl"
 ]
 
-app.run ["$state", "api", "$rootScope", ($state, api, $rootScope) ->
-  api.request "profile/auth"
-  .then (data) ->
-    if data.auth
-      $state.go "travel.feed"
-    else
-      $state.go "user.login"
+.run ["api", "$rootScope", (api, $rootScope) ->
+
   events = [
     "conversation/update"
     "user/update"

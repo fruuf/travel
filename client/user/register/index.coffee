@@ -6,6 +6,8 @@ module.exports = angular.module "userRegister", [
   $stateProvider
   .state "user.register",
     url: "/register"
+    params:
+      email: ""
     views:
       "main@":
         template: require "./template"

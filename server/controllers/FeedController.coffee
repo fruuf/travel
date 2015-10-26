@@ -1,4 +1,4 @@
-distance = require "../includes/distance"
+distanceModule = require "../modules/distance"
 _ = require "lodash"
 api = new Api "feed"
 
@@ -150,7 +150,7 @@ api.action "", (data, auth) ->
   .then (userList) ->
     for user in userList
       reason = getUserEntry user._id
-      dist = distance.calculate auth.coords, user.coords
+      dist = distanceModule.calculate auth.coords, user.coords
       if dist
         reason.distance = getDistanceRating dist.distance
       else
@@ -175,7 +175,7 @@ api.action "", (data, auth) ->
   .then (locationList) ->
     for location in locationList
       reason = getLocationEntry location._id
-      dist = distance.calculate auth.coords, location.coords
+      dist = distanceModule.calculate auth.coords, location.coords
       # console.log location.distance
       #console.log location.distance
       if dist
