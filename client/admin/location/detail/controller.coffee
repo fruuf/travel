@@ -30,7 +30,7 @@ class AdminLocationDetailController
         toastr.error status
 
   save: ->
-    @api.request "admin/location/update", @location
+    @api.request "admin/location/update", @location, 120000
     .then (res) =>
       @location = res.location
       toastr.success "location saved"
