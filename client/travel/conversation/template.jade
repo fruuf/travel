@@ -1,7 +1,19 @@
-h1 Conversations
-.list-group
-  .list-group-item.conversation(ng-repeat="conversation in ConversationCtrl.conversations | orderBy:'-updatedAt'", ui-sref=".detail({conversation:conversation._id})")
-    h4
-      span.user(ng-repeat="user in conversation.user") {{user.name}},
-      | {{conversation.updatedAt | date:'shortTime'}}
-    p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-3") {{ConversationCtrl.userStore[message.user].name}}: {{message.content}}
+.container
+  .row
+    .col-sm-5.conversations(ng-class="{'hidden-xs':$state.current.name == 'travel.conversation.detail'}")
+      h2 Conversations
+      .list-group
+        .list-group-item(ng-repeat="conversation in ConversationCtrl.conversations | orderBy:'-updatedAt'", ui-sref=".detail({conversation:conversation._id})")
+          .private(ng-repeat="user in conversation.user", ng-if="conversation.user.length == 2 && user._id != TravelCtrl.profile._id")
+            img.image-responsive.img-rounded(src="{{user.image.small}}")
+            p.date {{conversation.updatedAt | date:'shortTime'}}
+            p.user {{user.name}}
+            p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-1") {{ConversationCtrl.userStore[message.user].name}}: {{message.content | limitTo:100}}
+          .group(ng-if="conversation.user.length > 2")
+            span.user(ng-repeat="user in conversation.user",ng-if="user._id != TravelCtrl.profile._id") {{user.name}}
+            p.date {{conversation.updatedAt | date:'shortTime'}}
+            p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-1") {{ConversationCtrl.userStore[message.user].name}}: {{message.content | limitTo:100}}
+    .col-sm-7.messages(ui-view="content")
+      .hidden-xs
+        h2 Messages
+        p select a conversation

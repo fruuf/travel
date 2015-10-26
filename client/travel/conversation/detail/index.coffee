@@ -11,7 +11,7 @@ module.exports = angular.module "travelConversationDetail", [
       conversation: ""
       user: []
     views:
-      "content@travel":
+      "content@travel.conversation":
         template: require "./template"
         controller: "TravelConversationDetailController as DetailCtrl"
 ]

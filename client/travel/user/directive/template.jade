@@ -1,0 +1,7 @@
+.travel-user(ui-sref="travel.user.detail({user:user._id})")
+  h4.name {{user.name}}
+    span.label.label-success.online(ng-if="user.online == true") Online
+  img.img-responsive.img-thumbnail(ng-if="user.image", src="{{user.image.large}}")
+  img.img-responsive.img-thumbnail(ng-if="!user.image", src="/images/none.jpeg")
+  p {{description}}
+    

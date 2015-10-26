@@ -1,6 +1,11 @@
-p(ng-repeat="message in DetailCtrl.conversation.message | orderBy:'updatedAt' | limitTo:-10")
-  b {{DetailCtrl.userStore[message.user].name}}:
-  | {{message.content}}
+h2
+  span.user(ng-repeat="user in DetailCtrl.conversation.user", ng-if="TravelCtrl.profile._id != user._id") {{user.name}}
+div(ng-repeat="message in messages = (DetailCtrl.conversation.message | orderBy:'updatedAt' | limitTo:-10)", ng-class="{'self': message.user == TravelCtrl.profile._id, 'other': message.user != TravelCtrl.profile._id}")
+  p.user(ng-if="message.user != messages[$index - 1].user") {{DetailCtrl.userStore[message.user].name}}
+  p.message {{message.content}}
 form(ng-submit="DetailCtrl.submit()")
-  .row-fluid
+  .input-group
     input.form-control(type="text", ng-model="DetailCtrl.message")
+    .input-group-btn
+      button.btn.btn-primary(type="submit")
+        span.glyphicon.glyphicon-send

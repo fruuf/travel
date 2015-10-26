@@ -20,4 +20,5 @@ block content
       .input-group
         input.form-control(type="password", placeholder="password repeat", ng-model="RegisterCtrl.passwordRepeat", required)
         .input-group-btn
-          button.btn.btn-primary(ng-disabled="loading", ng-click="RegisterCtrl.continue()") Go
+          button.btn.btn-primary(ng-disabled="loading", ng-click="RegisterCtrl.continue()")
+            span.glyphicon.glyphicon-play

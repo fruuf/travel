@@ -7,4 +7,6 @@ block content
       .input-group
         input.form-control(type="email", placeholder="email", ng-model="UserCtrl.email", required)
         .input-group-btn
-          button.btn.btn-primary(ng-click="UserCtrl.continue()") Go
+          button.btn.btn-primary(ng-disabled="loading", ng-click="UserCtrl.continue()") 
+            span.glyphicon.glyphicon-play
+            

@@ -17,19 +17,19 @@ module.exports =
     .then ->
       sharp file
       .jpeg()
-      .quality 95
+      .quality 80
       .resize 426, 240
       .toFile "#{imagePath}#{image.small}"
     .then ->
       sharp file
       .jpeg()
-      .quality 95
+      .quality 80
       .resize 854, 480
       .toFile "#{imagePath}#{image.medium}"
     .then ->
       sharp file
       .jpeg()
-      .quality 95
+      .quality 80
       .resize 1280, 720
       .toFile "#{imagePath}#{image.large}"
     .then ->

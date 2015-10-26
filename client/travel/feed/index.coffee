@@ -1,5 +1,5 @@
 module.exports = angular.module "travelFeed", [
-  (require "./item").name
+  # (require "./item").name
 ]
 
 .controller "TravelFeedController", require "./controller"

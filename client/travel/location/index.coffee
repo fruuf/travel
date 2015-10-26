@@ -1,6 +1,6 @@
 module.exports = angular.module "travelLocation", [
   (require "./detail").name
-
+  (require "./directive").name
 ]
 
 .controller "TravelLocationController", require "./controller"

@@ -1,6 +1,3 @@
-.list-group
-  .list-group-item(ui-sref=".detail({location:location._id})", ng-repeat="location in LocationCtrl.locations")
-    h4 {{ocation.name}}
-    p {{location.address}}
-    p {{location.description}}
-    p(ng-if="item.distance") {{item.distance.formatted}}
+.location.container
+  travel-location(ng-repeat="location in LocationCtrl.locations", location="location")
+  

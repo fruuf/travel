@@ -1,4 +1,5 @@
 Api = require "api"
+Api.debug = on
 #fileread = require "./app/fileread"
 module.exports = angular.module "app", [
   "ui.router"
@@ -23,7 +24,8 @@ module.exports = angular.module "app", [
         else
           toastr.error err.message
       promise.finally ->
-        $rootScope.loading = no
+        if Api.activeRequests == 0
+          $rootScope.loading = no
       promise
 ]
 .controller "IndexController", ["$state", "api", class IndexController
@@ -46,8 +48,9 @@ module.exports = angular.module "app", [
         controller: "IndexController as IndexCtrl"
 ]
 
-.run ["api", "$rootScope", (api, $rootScope) ->
-
+.run ["api", "$rootScope", "$state", "$stateParams", (api, $rootScope, $state, $stateParams) ->
+  $rootScope.$state = $state
+  $rootScope.$stateParams = $stateParams
   events = [
     "conversation/update"
     "user/update"

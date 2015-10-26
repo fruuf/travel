@@ -32,14 +32,6 @@
 #travel {
   .navbar-travel {
     .navbar-header {
-      //float: left;
-      //padding: 15px;
-      //text-align: center;
-      //width: 100%;
-      //.navbar-brand {
-      //  display: inline-block;
-      //  float: none;
-      //}
 
       button {
         margin: 8px 15px;
@@ -51,6 +43,16 @@
   }
   .img-responsive {
     max-height: 40vh;
+  }
+  .user-conversation {
+    display: inline-block;
+    margin: 4px 0 4px 0;
+    width:50%;
+    img {
+      height: 40px;
+      display: inline-block;
+      margin: 0 10px 0 0;
+    }
   }
 
   .splash {
@@ -75,13 +77,6 @@
     }
   }
 
-  .feed-user {
-    &.online {
-      h3 {
-        font-weight: bold;
-      }
-    }
-  }
   .tag {
     margin: 0 3px;
     white-space:pre;
@@ -96,38 +91,98 @@
   #main-frame {
     margin-top:70px;
   }
-  .profile-picture {
-    background: #ccc;
-    height: 60vw;
-    width: 100%;
-    margin-bottom: 40px;
-    position: relative;
-    .preview {
-      position: absolute;
-      left:0;
-      top:0;
-      right:0;
-      bottom: 0;
-      background-position: center center;
-      background-size: cover;
+  @media (min-width: @screen-md-min) {
+    .feed {
+      .container;
     }
-    .buttons {
-      position:absolute;
-      bottom:10px;
-      right: 5px;
-      .glyphicon {
-        margin: 5px 10px;
-        text-shadow: 0 0 3px #fff;
+  }
+  .feed {
+    .filter {
+      margin-bottom: 20px;
+    }
+    .feed-item {
+      border-top: solid 1px #ccc;
+    }
+
+
+    @media (min-width: @screen-md-min) {
+      .feed-item {
+        float:left;
+        width:50%;
+        &:nth-child(2n) {
+            clear:left
+        }
       }
     }
   }
-  .user {
-    .image {
-      height: 80vw;
-      max-height:350px;
-      display: block;
-      background-position: center center;
-      background-size: cover;
+  .conversations {
+    .private {
+      min-height:40px;
+      position: relative;
+      padding-left: 80px;
+      img {
+        position: absolute;
+        left:0;
+        top:0;
+        width: 72px;
+      }
+      .date {
+        float:right;
+        color: @gray;
+      }
+      .user {
+        font-weight: bold;
+      }
+    }
+  }
+  .messages {
+    .other {
+      text-align:right;
+      padding: 0 0 0 60px;
+    }
+    .self {
+      text-align:left;
+      padding: 0 60px 0 0;
+    }
+    .user {
+      font-weight: bold;
+      margin:8px 0 0 0;
+    }
+    .message {
+      margin: 0;
+    }
+  }
+  .travel-user {
+    padding: 0 10px;
+    img {
+      //display: block;
+      //margin: 5px auto;
+    }
+    .online {
+      margin-left: 10px;
+    }
+  }
+  .travel-location {
+    padding: 0 10px;
+    img {
+      //display: block;
+      //margin: 5px auto;
+    }
+  }
+  .location {
+    .travel-location {
+      padding: 0 0 0 100px;
+      position: relative;
+      min-height: 90px / 16 * 9;
+      img {
+        position: absolute;
+        width:90px;
+        left:0;
+        top:0;
+      }
+      .description {
+        display: none;
+      }
     }
   }
 }

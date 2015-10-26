@@ -1,32 +1,29 @@
-.text-center(ngf-select, ngf-resize="{width:1280, height:720, quality:0.95}", ng-model="ProfileCtrl.profile.file",accept="image/*")
-  p click to upload new picture
-  img.img-responsive.img-thumbnail(ng-if="!ProfileCtrl.profile.file", src="{{ProfileCtrl.profile.image.large}}")
-  img.img-responsive.img-thumbnail(ng-if="ProfileCtrl.profile.file", ngf-src="ProfileCtrl.profile.file")
-hr
-form.form-horizontal
-  .form-group
-    label.col-sm-4.control-label Name
-    .col-sm-8
-      input.form-control(type="text", ng-model="ProfileCtrl.profile.name")
+.container
+  .row
+    .col-md-6
+      h2 Profile Picture
+      div(ngf-select, ngf-resize="{width:1280, height:720, quality:0.95}", ng-model="ProfileCtrl.profile.file",accept="image/*")
+        img.img-responsive.img-thumbnail(ng-if="!ProfileCtrl.profile.file", src="{{ProfileCtrl.profile.image.large}}")
+        img.img-responsive.img-thumbnail(ng-if="ProfileCtrl.profile.file", ngf-src="ProfileCtrl.profile.file")
+      p click on your profile picture to upload a new one!
+    .col-md-6
+      h2 Details
+      form
+        .form-group
+          label.control-label Name
+          input.form-control(type="text", ng-model="ProfileCtrl.profile.name", required)
 
-  .form-group
-    label.col-sm-4.control-label Nationality
-    .col-sm-8
-      input.form-control(type="text", ng-model="ProfileCtrl.profile.country")
+        .form-group
+          label.control-label Nationality
+          input.form-control(type="text", ng-model="ProfileCtrl.profile.country")
 
-  .form-group
-    label.col-sm-4.control-label Profession
-    .col-sm-8
-      input.form-control(type="text", ng-model="ProfileCtrl.profile.profession")
+        .form-group
+          label.control-label Profession
+          input.form-control(type="text", ng-model="ProfileCtrl.profile.profession")
 
-  .form-group
-    label.col-sm-4.control-label About me
-    .col-sm-8
-      textarea.form-control(rows="2", ng-model="ProfileCtrl.profile.about")
+        .form-group
+          label.control-label About me
+          textarea.form-control(rows="2", ng-model="ProfileCtrl.profile.about")
 
-  hr
-
-  .form-group
-    .col-sm-8.col-sm-offset-4
-      // a(ui-sref="travel").btn.btn-default Cancel
-      button.btn.btn-primary(ng-disabled="loading", ng-click="ProfileCtrl.update()") Save
+        .form-group
+          button.btn.btn-primary(ng-disabled="loading", ng-click="ProfileCtrl.update()") Save

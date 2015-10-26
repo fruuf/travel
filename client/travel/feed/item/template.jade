@@ -1,15 +1,17 @@
-div.list-group-item(ng-if="item.type == 'location'", ui-sref="travel.location.detail({location:item.location._id})")
+.location(ng-if="item.type == 'location'", ui-sref="travel.location.detail({location:item.location._id})")
   h4 {{item.location.name}}
   .text-center
     img.img-responsive.img-thumbnail(ng-if="item.location.image", src="{{item.location.image.large}}")
+    img.img-responsive.img-thumbnail(ng-if="!item.location.image", src="/images/none.jpeg")
   p {{item.location.address}}
   p {{description}}
   p(ng-if="item.distance") {{item.distance.formatted}}
 
-div.list-group-item.user(ui-sref="travel.user.detail({user:[item.user._id]})", ng-if="item.type == 'user'")
+.user(ui-sref="travel.user.detail({user:[item.user._id]})", ng-if="item.type == 'user'")
   h4 {{item.user.name}}
   .text-center
     img.img-responsive.img-thumbnail(ng-if="item.user.image", src="{{item.user.image.large}}")
+    img.img-responsive.img-thumbnail(ng-if="!item.user.image", src="/images/none.jpeg")
   p {{description}}
   p(ng-if="item.user.online == true")
     span.label.label-success Online

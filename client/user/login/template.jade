@@ -6,4 +6,5 @@ block content
       .input-group
         input.form-control(type="password", placeholder="password", ng-model="LoginCtrl.password", required)
         .input-group-btn
-          button.btn.btn-primary(ng-click="LoginCtrl.continue()") Go
+          button.btn.btn-primary(ng-disabled="loading", ng-click="LoginCtrl.continue()")
+            span.glyphicon.glyphicon-play

@@ -22,6 +22,7 @@ require "./controllers/ProfileController"
 require "./controllers/UserController"
 
 # Conversions
+Api.debug = yes
 Api.tokenAuth = (token) ->
   User.findOne "token.value": token
 Api.authID = (auth) ->

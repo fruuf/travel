@@ -1,0 +1,7 @@
+.travel-location(ui-sref="travel.location.detail({location:location._id})")
+  h4.name {{location.name}}
+  img.img-responsive.img-thumbnail(ng-if="location.image", src="{{location.image.large}}")
+  img.img-responsive.img-thumbnail(ng-if="!location.image", src="/images/none.jpeg")
+  p.address {{location.address}}
+  p.description {{location.description}}
+  p.distance(ng-if="distance") {{distance.formatted}}
