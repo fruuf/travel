@@ -8,25 +8,27 @@ api = new Api "user"
 
 
 Api.on "online", (auth) ->
-  User.update _id: auth._id,
-    online: yes
+  auth.online = yes
+  auth.save()
   .then ->
-    User.find {}
+    User.findAll
+      online: yes
   .then (users) ->
     for user in users
       api.notify user, "update",
-        _id: auth._id
+        id: auth.id
         online: yes
 
 Api.on "offline", (auth) ->
-  User.update _id: auth._id,
-    online: no
+  auth.online = no
+  auth.save()
   .then ->
-    User.find {}
+    User.findAll
+      online: yes
   .then (users) ->
     for user in users
       api.notify user, "update",
-        _id: auth._id
+        id: auth.id
         online: no
 
 api.action "detail", (data, auth) ->

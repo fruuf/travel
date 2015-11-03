@@ -1,17 +1,15 @@
 config = require "../config"
 mongoose = require "mongoose"
 
+
 # Connect DB
 mongoose.connect config.db
 global.ObjectId = mongoose.Types.ObjectId
 global.toObject = (obj) ->
   obj.map (item) -> item.toObject()
 
-# Models
-global.Conversation = require "./models/Conversation"
-global.Location = require "./models/Location"
-global.Tag = require "./models/Tag"
-global.User = require "./models/User"
+require "./models"
+
 
 # Controllers
 require "./controllers/AdminController"
@@ -24,9 +22,14 @@ require "./controllers/UserController"
 # Conversions
 Api.debug = yes
 Api.tokenAuth = (token) ->
-  User.findOne "token.value": token
+  if not token
+    return null
+  Token.findOne
+    where:
+      value: token
+    include: [User]
+  .then (token) ->
+    token?.User or null
+
 Api.authID = (auth) ->
-  if auth._id
-    auth._id
-  else
-    auth
+  auth.id

@@ -27,8 +27,7 @@ build/Release
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
 travel.pem
-ssl-key.pem
-ssl-cert.pem
-certrequest.csr
+ssl
 public/files
 config.coffee
+admin

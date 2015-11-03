@@ -1,20 +1,19 @@
-imageModule = require "../modules/image"
 api = new Api "admin"
+_ = require "lodash"
 
 api.action "auth", (data, auth) ->
   if auth?.admin
-    auth: auth._id
+    auth: auth.id
   else
     auth: no
 
+
 api.action "location", (data, auth) ->
   throw new Error "auth" if not auth?.admin
-  Location.find {}
+  Location.findAll
+    include: [Tag, Image]
   .then (locations) ->
-    Tag.find {}
-    .then (tags) ->
-      locations: locations
-      tags: tags
+    locations: locations
 
 api.action "location/add", (data, auth) ->
   throw new Error "auth" if not auth?.admin
@@ -23,46 +22,67 @@ api.action "location/add", (data, auth) ->
   .then (location) ->
     location: location
 
+
 api.action "location/detail", (data, auth) ->
   throw new Error "auth" if not auth?.admin
-  Location.findOne
-    _id: data.location
+  Location.findById data.location,
+    include: [Tag, Image]
   .then (location) ->
-    Tag.find
-      location:
-        $ne: location._id
-    .then (tagDisabled) ->
-      Tag.find
-        location: location._id
-      .then (tagEnabled) ->
-        location: location
-        tagEnabled: tagEnabled
-        tagDisabled: tagDisabled
+    Tag.findAll()
+    .then (tags) ->
+      location: location
+      tags: tags
 
+api.action "location/image/add", (data, auth) ->
+  throw new Error "auth" if not auth?.admin
+  Location.findById data.location
+  .then (location) ->
+    Image.create()
+    .then (image) ->
+      image.setFile data.file
+    .then (image) ->
+      location.addImage image
+
+api.action "location/image/destroy", (data, auth) ->
+  throw new Error "auth" if not auth?.admin
+  Location.findById data.location
+  .then (location) ->
+    Image.findById data.image
+    .then (image) ->
+      location.removeImage image
+
+api.action "location/image/primary", (data, auth) ->
+  throw new Error "auth" if not auth?.admin
+  Location.findById data.location,
+    include: [Image]
+  .then (location) ->
+    for image in location.Image
+      image.primary = no
+      image.save()
+    Image.findById data.image
+    .then (image) ->
+      image.primary = yes
+      image.save()
 
 api.action "location/update", (data, auth) ->
   throw new Error "auth" if not auth?.admin
-  delete data.image
-  Location.findOne _id: data._id
+  Location.findById data.id
   .then (location) ->
-    console.log data
+    location.update data
+  .then (location) ->
     if data.file
-      if location.image
-        imageModule.remove location.image
-      imageModule.save data.file
+      Image.create()
+      .then (image) ->
+        image.setFile data.file
+      .then (image) ->
+        location.addImage location
     else
       no
-  .then (image) ->
-    if image
-      data.image = image
-    Location.update
-      _id: data._id
-    , data
-  .then (res) ->
-    Location.findOne _id: data._id
+  .then ->
+    Location.findById data.id,
+      include: [Image, Tag]
   .then (location) ->
     location: location
-
 
 
 api.action "tag/add", (data, auth) ->

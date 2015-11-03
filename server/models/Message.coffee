@@ -1,6 +1,5 @@
 {STRING, BOOLEAN, INTEGER} = require "sequelize"
 
-module.exports = sequelize.define "Tag",
-  name:
+module.exports = sequelize.define "Message",
+  content:
     type: STRING
-    unique: yes
