@@ -4,14 +4,9 @@ path = require "path"
 api = new Api "profile"
 q = require "q"
 imageModule = require "../modules/image"
-
-###
 geoipLite = require "geoip-lite"
-coords= []
-geo = geoipLite.lookup req.ip
-if geo
-  coords = [geo.ll[1], geo.ll[0]]
-###
+
+
 
 
 
@@ -68,7 +63,7 @@ api.action "update", (data, auth) ->
   .then (profile) ->
     profile: profile
 
-api.action "register", (data) ->
+api.action "register", (data, auth, handshake) ->
   if not data.name or not data.file or not data.password or not data.email
     throw new Error "information missing"
   salt = bcrypt.genSaltSync(10)
@@ -77,12 +72,18 @@ api.action "register", (data) ->
 
   imageModule.save data.file
   .then (image) ->
-
+    coords= []
+    geo = geoipLite.lookup handshake.address
+    console.log "geo", geo, handshake
+    if geo
+      coords = [geo.ll[1], geo.ll[0]]
+      console.log "geoCoords", coords
     User.create
       email: data.email
       password: hash
       name: data.name
       image: image
+      location: coords
 
   .then (user) ->
 
