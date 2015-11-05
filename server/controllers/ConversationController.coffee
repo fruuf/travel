@@ -1,5 +1,6 @@
 _ = require "lodash"
 api = new Api "conversation"
+distanceModule = require "../modules/distance"
 
 api.action "", (data, auth) ->
   throw new Error "auth" if not auth
@@ -8,6 +9,8 @@ api.action "", (data, auth) ->
     user: auth._id
   .populate "user"
   .then (conversations) ->
+    for conversation in conversations
+      conversation.user = conversation.user.map (user) -> distanceModule user, auth
     conversations: conversations
 ###
 api.filter "",
@@ -35,6 +38,7 @@ api.action "detail", (data, auth) ->
     .populate "user"
     .then (conversation) ->
       if conversation
+        conversation.user.map (user) -> distanceModule user, auth
         conversation: conversation
       else
         Conversation.create
@@ -43,12 +47,16 @@ api.action "detail", (data, auth) ->
           Conversation.findOne _id: conversation._id
           .populate "user"
         .then (conversation) ->
+          conversation.user.map (user) -> distanceModule user, auth
+          for user in conversation.user
+            api.notify user, "create", conversation
           conversation: conversation
 
   else if data.conversation
     Conversation.findOne _id: data.conversation
     .populate "user"
     .then (conversation) ->
+      conversation.user.map (user) -> distanceModule user, auth
       conversation: conversation
 
   else
@@ -71,12 +79,9 @@ api.action "message/add", (data, auth) ->
     conversation.updatedAt = Date.now()
     conversation.save()
   .then (conversation) ->
+    message = _.last conversation.message
     for user in conversation.user
       api.notify user, "update",
         _id: conversation._id
-        message: [
-          user: auth._id
-          content: data.content
-          createdAt: Date.now()
-        ]
+        message: [message]
     yes

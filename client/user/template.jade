@@ -1,9 +1,11 @@
 extends ./splash
 block content
-
+  h1 Welcome to pikeet
+  p We want you to meet people that share the same interest as you do and want to travel to the same places you want to enjoy
+  p Let us know your email address and we get you started. It's quick and easy!
+  hr
   form
     .form-group
-      label your email address
       .input-group
         input.form-control(type="email", placeholder="email", ng-model="UserCtrl.email", required)
         .input-group-btn

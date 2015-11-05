@@ -9,9 +9,8 @@ class TravelController
 
     $scope.$on "conversation/update", (event, conversation) =>
       message = conversation.message[0]
-      if not (@profile._id == message.user) and not (@$state.current.name == "travel.conversation")
+      if not (@profile._id == message.user) and not (@$state.current.name == "travel.conversation.detail")
         toastr.info "New Message"
-
 
   logout: ->
     Api.setToken()
@@ -20,7 +19,6 @@ class TravelController
     yes
 
   go: (state) ->
-    $('.navmenu').offcanvas "hide"
     @$state.go state
 
 module.exports = ["$state", "api", "$scope", TravelController]

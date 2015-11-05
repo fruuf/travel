@@ -1,24 +1,23 @@
-nav#menu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas
-  .container
-    ul.nav.navbar-nav
-      li
-        a(ng-click="TravelCtrl.go('travel.feed')") Feed
-      li
-        a(ng-click="TravelCtrl.go('travel.location')") Places
-      li
-        a(ng-click="TravelCtrl.go('travel.conversation')") Messages
-      li
-        a(ng-click="TravelCtrl.go('travel.profile')") Edit profile
-      li
-        a(ng-click="TravelCtrl.logout()") Logout
-
-.navbar.navbar-default.navbar-fixed-top.navbar-travel
-  .navbar-header
-    button.menu.navbar-toggle(data-toggle="offcanvas", data-target="#menu", data-canvas="body")
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
-    a.navbar-brand(ui-sref="travel.feed") {{TravelCtrl.profile.name}}
-
-
 #main-frame(ui-view="content")
+.navbar.navbar-default.navbar-fixed-bottom.navbar-travel
+  .nav-item 
+    a(ng-click="TravelCtrl.go('travel.feed')")
+      i.fa.fa-rss
+      span.hidden-xs Feed
+  .nav-item 
+    a(ng-click="TravelCtrl.go('travel.location')")
+      i.fa.fa-heart
+      span.hidden-xs Locations
+  .nav-item  
+    a(ng-click="TravelCtrl.go('travel.conversation')")
+      i.fa.fa-envelope
+      span.hidden-xs Messages
+  .nav-item  
+    a(ng-click="TravelCtrl.go('travel.profile')")
+      i.fa.fa-pencil-square-o
+      span.hidden-xs Edit Profile
+  .nav-item  
+    a(ng-click="TravelCtrl.logout()")
+      i.fa.fa-sign-out
+      span.hidden-xs Logout
+        

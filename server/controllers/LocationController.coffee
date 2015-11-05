@@ -1,26 +1,23 @@
 _ = require "lodash"
 api = new Api "location"
-
+distanceModule = require "../modules/distance"
 
 api.action "detail", (data, auth) ->
   throw new Error "auth" if not auth
 
   Location.findOne _id: data.location
   .then (location) ->
-    console.log location
+    location = distanceModule location, auth
     User.find
       location: location._id
       _id:
         $ne: auth._id
     .then (users) ->
-      console.log "user prototype", typeof users
+      users = users.map (user) -> distanceModule user, auth
       index = auth.location.indexOf location._id
       users: users
       location: location
       status: not (index == -1)
-  .then (res) ->
-    console.log res
-    res
 
 api.action "", (data, auth) ->
   throw new Error "auth" if not auth
@@ -28,6 +25,9 @@ api.action "", (data, auth) ->
     _id:
       $in: auth.location
   .then (locations) ->
+    console.log locations
+    locations = locations.map (location) -> distanceModule location, auth
+    console.log locations
     locations: locations
 
 api.action "status", (data, auth) ->

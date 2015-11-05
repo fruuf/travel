@@ -28,22 +28,106 @@
 @navbar-default-toggle-icon-bar-bg:        @navbar-default-link-color;
 @navbar-default-toggle-border-color:       transparent;
 
+@nav-size: 50px;
+@nav-font: 20px;
 // @btn-primary-color: @gray-dark;
+body, html {
+  height: 100%;
+}
+.travel-user {
+  .online {
+    margin-left: 1em;
+    .text-success;
+  }
+  .name {
+    font-weight: bold;
+  }
+}
+.travel-location {
+  .name {
+    font-weight: bold;
+  }
+}
+
+.user-small {
+  p {
+    margin: 0 0 5px 0;
+  }
+  .about {
+    display: none;
+  }
+  .picture {
+    width: 40px;
+    height: 40px;
+  }
+  .distance {
+    display: none;
+  }
+  .description {
+    display: none;
+  }
+}
+.user-medium, .location-medium {
+  p {
+    margin: 0 0 5px 0;
+  }
+  display: block;
+  position: relative;
+  padding: 0 0 0 90px;
+  min-height:80px;
+  .picture {
+    .img-circle;
+    width: 80px;
+    height: 80px;
+    left:0;
+    top:0;
+    position: absolute;
+
+  }
+}
+
+.location-large, .user-large {
+  p {
+    margin: 0 0 5px 0;
+  }
+  display: block;
+  position: relative;
+  padding: 10px 10px 10px 215px;
+  min-height: 210px;
+  .picture {
+    .img-thumbnail;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width:200px;
+    height: 200px;
+
+
+  }
+}
+
 #travel {
   .navbar-travel {
-    .navbar-header {
-
-      button {
-        margin: 8px 15px;
-        &.menu {
-          float:left;
+    height: @nav-size;
+    .nav-item {
+      width: 20%;
+      height: @nav-size;
+      display: inline-block;
+      text-align: center;
+      a {
+        color:#fff;
+        font-size: @nav-font;
+        line-height: @nav-size;
+        &:hover, &:active, &:focus {
+          text-decoration: none;
+        }
+        i {
+          margin-right: 10px;
         }
       }
     }
   }
-  .img-responsive {
-    max-height: 40vh;
-  }
+
   .user-conversation {
     display: inline-block;
     margin: 4px 0 4px 0;
@@ -89,7 +173,22 @@
     margin: 0 0 30px 0;
   }
   #main-frame {
-    margin-top:70px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    left:0;
+    top:0;
+    bottom:60px;
+    right:0;
+    .fullheight {
+      height: 100%;
+      position: relative;
+    }
+    .fullheight-scroll {
+      height: 100%;
+      overflow-y: auto;
+      position: relative;
+    }
   }
   @media (min-width: @screen-md-min) {
     .feed {
@@ -100,88 +199,111 @@
     .filter {
       margin-bottom: 20px;
     }
-    .feed-item {
-      border-top: solid 1px #ccc;
+  }
+  .split {
+    position: relative;
+    width: 100%;
+    .item {
+      width: 100%;
+      display: block;
+      position: relative;
+      margin: 0 0 20px 0;
     }
-
-
     @media (min-width: @screen-md-min) {
-      .feed-item {
+      .item {
         float:left;
         width:50%;
-        &:nth-child(2n) {
+        &:nth-child(2n+1) {
             clear:left
         }
       }
     }
   }
-  .conversations {
-    .private {
-      min-height:40px;
-      position: relative;
-      padding-left: 80px;
-      img {
-        position: absolute;
-        left:0;
-        top:0;
-        width: 72px;
-      }
-      .date {
-        float:right;
-        color: @gray;
-      }
-      .user {
-        font-weight: bold;
-      }
-    }
-  }
-  .messages {
-    .other {
-      text-align:right;
-      padding: 0 0 0 60px;
-    }
-    .self {
-      text-align:left;
-      padding: 0 60px 0 0;
-    }
-    .user {
-      font-weight: bold;
-      margin:8px 0 0 0;
-    }
+  .conversation-content {
+
     .message {
-      margin: 0;
-    }
-  }
-  .travel-user {
-    padding: 0 10px;
-    img {
-      //display: block;
-      //margin: 5px auto;
-    }
-    .online {
-      margin-left: 10px;
-    }
-  }
-  .travel-location {
-    padding: 0 10px;
-    img {
-      //display: block;
-      //margin: 5px auto;
-    }
-  }
-  .location {
-    .travel-location {
-      padding: 0 0 0 100px;
+      height: 100%;
       position: relative;
-      min-height: 90px / 16 * 9;
-      img {
+      .message-input {
         position: absolute;
-        width:90px;
-        left:0;
-        top:0;
+        bottom: 0;
+        width: 100%;
       }
-      .description {
-        display: none;
+      .message-list {
+        position: absolute;
+        left:0;
+        bottom: 40px;
+        right: 0;
+        top:0;
+        overflow-y: auto;
+        .message-group {
+          background-color: #F2F2F2;
+          border-radius: 5px;
+          box-shadow: 0 0 6px #B2B2B2;
+          display: inline-block;
+          padding: 10px 18px;
+          position: relative;
+          vertical-align: top;
+          clear: both;
+          .travel-user {
+            .user-small;
+            .picture {
+              .img-circle;
+              width:40px;
+              height:40px;
+              top: 5px;
+              position: absolute;
+            }
+            .online {
+              display: none;
+            }
+          }
+          p {
+            margin: 0 0 5px 0;
+          }
+          &::before {
+            background-color: #F2F2F2;
+            content: "\00a0";
+            display: block;
+            height: 16px;
+            position: absolute;
+            top: 11px;
+            transform:             rotate( 29deg ) skew( -35deg );
+                -moz-transform:    rotate( 29deg ) skew( -35deg );
+                -ms-transform:     rotate( 29deg ) skew( -35deg );
+                -o-transform:      rotate( 29deg ) skew( -35deg );
+                -webkit-transform: rotate( 29deg ) skew( -35deg );
+            width:  20px;
+          }
+
+          &.self {
+            float: left;
+            padding-left: 60px;
+            margin: 5px 45px 5px 20px;
+            &::before {
+              box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+              left: -9px;
+            }
+            .travel-user .picture {
+              left:5px;
+            }
+
+          }
+          &.other {
+            float: right;
+            padding-right: 60px;
+            margin: 5px 20px 5px 45px;
+            &::before {
+              box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+              right: -9px;
+            }
+            .travel-user .picture {
+              right:5px;
+            }
+          }
+
+
+        }
       }
     }
   }

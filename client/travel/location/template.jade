@@ -1,3 +1,6 @@
-.location.container
-  travel-location(ng-repeat="location in LocationCtrl.locations", location="location")
-  
+.split.container(ng-if="LocationCtrl.locations.length")
+  travel-location.location-medium.item(ng-repeat="location in LocationCtrl.locations", location="location", ui-sref="travel.location.detail({location: location._id})")
+.container(ng-if="!LocationCtrl.locations.length")
+  h2 You dont like any location?
+  p You haven't liked any location yet. Just take a look into your <a ui-sref="travel.feed">feed</a> and select the ones you're interested in.
+  p We find you more similar locations and connect you to people that share the same interest.

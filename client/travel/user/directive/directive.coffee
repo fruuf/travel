@@ -9,7 +9,6 @@ module.exports = ->
     scope.$on "user/update", (event, data) ->
       if data._id == user._id
         scope.user.online = data.online
-        scope.$digest()
 
     description = []
     description.push user.country if user.country

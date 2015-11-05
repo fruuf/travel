@@ -1,15 +1,16 @@
 .container
-  h1 {{DetailCtrl.location.name}}
-  p {{DetailCtrl.location.description}}
-  p {{DetailCtrl.location.address}}
-  button.btn.btn-primary(ng-disabled="loading", ng-if="DetailCtrl.status == false", ng-click="DetailCtrl.setStatus(true)") I want to go
-  button.btn.btn-default(ng-disabled="loading", ng-if="DetailCtrl.status == true", ng-click="DetailCtrl.setStatus(false)") No more interest
+  .row
+    .col-sm-6.text-center
+      img.img-responsive.img-thumbnail(res-src="DetailCtrl.location.image")
+      
+    .col-sm-6
+      h2 {{DetailCtrl.location.name}}
+      p {{DetailCtrl.location.address}}
+      p {{DetailCtrl.location.distance | distance}}
+      button.btn.btn-primary.btn-block(ng-disabled="loading", ng-if="DetailCtrl.status == false", ng-click="DetailCtrl.setStatus(true)") I want to go
+      button.btn.btn-default.btn-block(ng-disabled="loading", ng-if="DetailCtrl.status == true", ng-click="DetailCtrl.setStatus(false)") No more interest
 
-  h3 Users that want to go
-  .list-group
-    .list-group-item(ng-repeat="user in DetailCtrl.users", ui-sref="travel.user.detail({user:user._id})")
-      h4 {{user.name}}
-      p
-        span(ng-if="user.profession") {{user.profession}},
-        span(ng-if="user.country") {{user.country}},
-        span(ng-if="user.about") {{user.about}}
+.container(ng-if="DetailCtrl.users.length")
+  h2 Users that want to go
+  .split
+    travel-user.user-medium.item(ng-repeat="user in DetailCtrl.users", user="user", ui-sref="travel.user.detail({user: user._id})")

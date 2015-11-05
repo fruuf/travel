@@ -7,6 +7,9 @@ module.exports = angular.module "app", [
   'ngFileUpload'
   (require "./user").name
   (require "./travel").name
+  (require "./app/scrollBottom").name
+  (require "./app/distance").name
+  (require "./app/resSrc").name
 ]
 
 
@@ -53,6 +56,7 @@ module.exports = angular.module "app", [
   $rootScope.$stateParams = $stateParams
   events = [
     "conversation/update"
+    "conversation/create"
     "user/update"
 
   ]

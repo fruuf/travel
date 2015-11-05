@@ -1,19 +1,15 @@
-.container
-  .row
-    .col-sm-5.conversations(ng-class="{'hidden-xs':$state.current.name == 'travel.conversation.detail'}")
+.container.conversations.fullheight(ng-if="ConversationCtrl.conversations.length || $state.current.name == 'travel.conversation.detail'")
+  .row.fullheight
+    .col-sm-5.conversations.fullheight-scroll(ng-class="{'hidden-xs':$state.current.name == 'travel.conversation.detail'}")
       h2 Conversations
       .list-group
         .list-group-item(ng-repeat="conversation in ConversationCtrl.conversations | orderBy:'-updatedAt'", ui-sref=".detail({conversation:conversation._id})")
-          .private(ng-repeat="user in conversation.user", ng-if="conversation.user.length == 2 && user._id != TravelCtrl.profile._id")
-            img.image-responsive.img-rounded(src="{{user.image.small}}")
-            p.date {{conversation.updatedAt | date:'shortTime'}}
-            p.user {{user.name}}
-            p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-1") {{ConversationCtrl.userStore[message.user].name}}: {{message.content | limitTo:100}}
-          .group(ng-if="conversation.user.length > 2")
-            span.user(ng-repeat="user in conversation.user",ng-if="user._id != TravelCtrl.profile._id") {{user.name}}
-            p.date {{conversation.updatedAt | date:'shortTime'}}
-            p.message(ng-repeat="message in conversation.message | orderBy: 'createdAt' | limitTo:-1") {{ConversationCtrl.userStore[message.user].name}}: {{message.content | limitTo:100}}
-    .col-sm-7.messages(ui-view="content")
+          travel-user.user-medium(user="user", ng-repeat="user in conversation.user", ng-if="user._id != TravelCtrl.profile._id")
+    .col-sm-7.conversation-content.fullheight(ui-view="content", ng-class="{'hidden-xs':$state.current.name == 'travel.conversation'}")
       .hidden-xs
         h2 Messages
         p select a conversation
+.container(ng-if="!ConversationCtrl.conversations.length && $state.current.name == 'travel.conversation'")
+  h2 Go talk to someone :)
+  p You find amazing people in your <a ui-sref="travel.feed">feed</a>. We selected them for you based on your interest and how close they are to you.
+  p Just click on their profile, see which locations you share and get to know each other in our chat.

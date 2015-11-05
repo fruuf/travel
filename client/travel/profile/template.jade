@@ -2,7 +2,7 @@
   .row
     .col-md-6
       h2 Profile Picture
-      div(ngf-select, ngf-resize="{width:1280, height:720, quality:0.95}", ng-model="ProfileCtrl.profile.file",accept="image/*")
+      div(ngf-select, ngf-resize="{width:500, height:500, quality:0.95}", ng-model="ProfileCtrl.profile.file",accept="image/*")
         img.img-responsive.img-thumbnail(ng-if="!ProfileCtrl.profile.file", src="{{ProfileCtrl.profile.image.large}}")
         img.img-responsive.img-thumbnail(ng-if="ProfileCtrl.profile.file", ngf-src="ProfileCtrl.profile.file")
       p click on your profile picture to upload a new one!
@@ -26,4 +26,4 @@
           textarea.form-control(rows="2", ng-model="ProfileCtrl.profile.about")
 
         .form-group
-          button.btn.btn-primary(ng-disabled="loading", ng-click="ProfileCtrl.update()") Save
+          button.btn.btn-primary.btn-block(ng-disabled="loading", ng-click="ProfileCtrl.update()") Save

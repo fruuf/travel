@@ -4,8 +4,7 @@ mongoose = require "mongoose"
 # Connect DB
 mongoose.connect config.db
 global.ObjectId = mongoose.Types.ObjectId
-global.toObject = (obj) ->
-  obj.map (item) -> item.toObject()
+
 
 # Models
 global.Conversation = require "./models/Conversation"

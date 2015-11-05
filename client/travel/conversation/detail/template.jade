@@ -1,11 +1,12 @@
-h2
-  span.user(ng-repeat="user in DetailCtrl.conversation.user", ng-if="TravelCtrl.profile._id != user._id") {{user.name}}
-div(ng-repeat="message in messages = (DetailCtrl.conversation.message | orderBy:'updatedAt' | limitTo:-10)", ng-class="{'self': message.user == TravelCtrl.profile._id, 'other': message.user != TravelCtrl.profile._id}")
-  p.user(ng-if="message.user != messages[$index - 1].user") {{DetailCtrl.userStore[message.user].name}}
-  p.message {{message.content}}
-form(ng-submit="DetailCtrl.submit()")
-  .input-group
-    input.form-control(type="text", ng-model="DetailCtrl.message")
-    .input-group-btn
-      button.btn.btn-primary(type="submit")
-        span.glyphicon.glyphicon-send
+.message
+  .message-list(scroll-bottom="DetailCtrl.messageGroups")
+    .message-group(ng-repeat="group in DetailCtrl.messageGroups", ng-class="{'self': group.user._id == TravelCtrl.profile._id, 'other': group.user._id != TravelCtrl.profile._id}")
+      travel-user(user="group.user", user-clickable)
+      p(ng-repeat="message in group.messages") {{message.content}}
+  .message-input
+    form(ng-submit="DetailCtrl.submit()")
+      .input-group
+        input.form-control(type="text", ng-model="DetailCtrl.message")
+        .input-group-btn
+          button.btn.btn-primary(type="submit")
+            span.glyphicon.glyphicon-send

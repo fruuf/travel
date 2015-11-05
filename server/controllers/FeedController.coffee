@@ -148,11 +148,11 @@ api.action "", (data, auth) ->
         $in: userIdList
         $nin: [auth._id]
   .then (userList) ->
+    userList = userList.map (user) -> distanceModule user, auth
     for user in userList
       reason = getUserEntry user._id
-      dist = distanceModule.calculate auth.coords, user.coords
-      if dist
-        reason.distance = getDistanceRating dist.distance
+      if user.distance
+        reason.distance = getDistanceRating user.distance
       else
         reason.distance = 0
 
@@ -163,7 +163,6 @@ api.action "", (data, auth) ->
       feedUser.push
         user: user
         reason: reason
-        distance: dist
 
     # locationIdList = _.difference (), auth.location
 
@@ -173,13 +172,12 @@ api.action "", (data, auth) ->
         $nin: auth.location
 
   .then (locationList) ->
+    locationList = locationList.map (location) -> distanceModule location, auth
     for location in locationList
       reason = getLocationEntry location._id
-      dist = distanceModule.calculate auth.coords, location.coords
-      # console.log location.distance
-      #console.log location.distance
-      if dist
-        reason.distance = getDistanceRating dist.distance, location.halfDistance
+
+      if location.distance
+        reason.distance = getDistanceRating location.distance, location.halfDistance
       else
         reason.distance = 0
 
@@ -194,7 +192,6 @@ api.action "", (data, auth) ->
       feedLocation.push
         location: location
         reason: reason
-        distance: dist
 
 
 
@@ -224,14 +221,12 @@ api.action "", (data, auth) ->
         type: "user"
         user: item.user
         reason: item.reason
-        distance: item.distance
 
     for item in feedLocation.splice 0, 6
       feed.push
         type: "location"
         location: item.location
         reason: item.reason
-        distance: item.distance
 
     feed = _.shuffle feed
     feed: feed

@@ -1,8 +1,11 @@
 extends ../splash
 block content
+  h1 Welcome back!
+  p We know you! You've been here before. Sign in to your account with your password.
+  hr
   form
     .form-group
-      label your password
+      p your password
       .input-group
         input.form-control(type="password", placeholder="password", ng-model="LoginCtrl.password", required)
         .input-group-btn

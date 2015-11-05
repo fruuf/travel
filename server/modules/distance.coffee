@@ -1,41 +1,34 @@
 Number.prototype.toRadians = ->
   @ * Math.PI / 180
 
-module.exports =
-  calculate: (coordsA, coordsB) ->
-    result = no
-    # console.log "distance", coordsA, coordsB
-    if coordsA and coordsB and coordsA[0] and coordsA[1] and coordsB[0] and coordsB[1]
-      lat1 = coordsA[1]
-      lon1 = coordsA[0]
+module.exports = (obj, auth) ->
+  if obj.toObject
+    obj = obj.toObject()
 
-      lat2 = coordsB[1]
-      lon2 = coordsB[0]
+  result = no
+  # console.log "distance", coordsA, coordsB
+  if obj.coords[0] and obj.coords[1] and auth.coords[0] and auth.coords[1]
+    lat1 = auth.coords[1]
+    lon1 = auth.coords[0]
 
-      R = 6371000
-      φ1 = lat1.toRadians()
-      φ2 = lat2.toRadians()
-      Δφ = (lat2-lat1).toRadians()
-      Δλ = (lon2-lon1).toRadians()
+    lat2 = obj.coords[1]
+    lon2 = obj.coords[0]
 
-      a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-        Math.cos(φ1) * Math.cos(φ2) *
-        Math.sin(Δλ/2) * Math.sin(Δλ/2)
+    R = 6371000
+    φ1 = lat1.toRadians()
+    φ2 = lat2.toRadians()
+    Δφ = (lat2-lat1).toRadians()
+    Δλ = (lon2-lon1).toRadians()
 
-      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-      d = R * c
-      formatted = "0m"
-      if d
-        log = Math.floor (Math.log d) / (Math.log 10)
-        shift = log - 1
-        rel = Math.pow(10, shift) * Math.round (d * (Math.pow 10, - shift))
-        if log > 2
-          formatted = "#{rel / 1000}km"
-        else
-          formatted = "#{rel}m"
+    a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+      Math.cos(φ1) * Math.cos(φ2) *
+      Math.sin(Δλ/2) * Math.sin(Δλ/2)
 
-      result =
-        distance: Math.round d
-        formatted: formatted
+    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+    obj.distance = Math.round (R * c)
+  else
+    obj.distane = 0
+  console.log obj
+  delete obj.coords
 
-    result
+  obj

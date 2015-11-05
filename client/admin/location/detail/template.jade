@@ -21,7 +21,7 @@ form.form-horizontal
   .form-group
     label.col-sm-4.control-label New Image
     .col-sm-8
-      .input-group(ngf-select, ngf-resize="{width:1280, height:720, quality:0.95}", ng-model="DetailCtrl.location.file",accept="image/*")
+      .input-group(ngf-select, ngf-resize="{width:500, height:500, quality:0.95}", ng-model="DetailCtrl.location.file",accept="image/*")
         input.form-control(type="text", readonly, placeholder="choose image", ng-model="DetailCtrl.location.file.name", required)
         .input-group-btn
           button.btn.btn-primary

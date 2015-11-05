@@ -41,17 +41,11 @@ api.action "detail", (data, auth) ->
       _id:
         $in: intersection
     .then (locations) ->
-      user: user.toObject()
-      locations: toObject locations
-      distance: distanceModule.calculate auth.coords, user.coords
+      user = distanceModule user, auth
+      locations = locations.map (location) -> distanceModule location, auth
+      user: user
+      locations: locations
 
 api.filter "detail",
-  user:
-    name: yes
-    _id: yes
-    profession: yes
-    about: yes
-    online: yes
-    country: yes
+  user: ["name", "_id", "profession", "about", "online", "image", "country", "distance"]
   locations: yes
-  distance: yes

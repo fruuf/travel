@@ -1,22 +1,25 @@
 extends ../splash
 block content
+  h1 You're new!
+  p It looks like you haven't been here yet. Tell us a little bit about yourself and select a nice profile picture. You can change these details any time.
+  hr
   form
     .form-group
-      label your name
+      p your name
       input.form-control(type="text", placeholder="name", ng-model="RegisterCtrl.name", required)
 
     .form-group
-      label profile picture
-      .input-group(ngf-select, ngf-resize="{width:1280, height:720, quality:0.95}", ng-model="RegisterCtrl.file",accept="image/*")
+      p profile picture
+      .input-group(ngf-select, ngf-resize="{width:500, height:500, quality:0.95}", ng-model="RegisterCtrl.file",accept="image/*")
         input.form-control(type="text", readonly, placeholder="choose image", ng-model="RegisterCtrl.file.name", required)
         .input-group-btn
           button.btn.btn-primary
             span.glyphicon.glyphicon-search
     .form-group
-      label your password
+      p your password
       input.form-control(type="password", placeholder="password", ng-model="RegisterCtrl.password", required)
     .form-group
-      label repeat your password
+      p repeat your password
       .input-group
         input.form-control(type="password", placeholder="password repeat", ng-model="RegisterCtrl.passwordRepeat", required)
         .input-group-btn

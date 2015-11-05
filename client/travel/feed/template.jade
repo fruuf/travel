@@ -5,7 +5,7 @@
         button.btn.btn-default(ng-click="FeedCtrl.filter('user')", ng-class="{'active': FeedCtrl.type == 'user'}") People
       .btn-group
         button.btn.btn-default(ng-click="FeedCtrl.filter('location')", ng-class="{'active': FeedCtrl.type == 'location'}") Places
-  
-  .feed-item(ng-repeat="item in FeedCtrl.feed | filter:{hidden:false}")
-    travel-user(ng-if="item.type == 'user'", user="item.user")
-    travel-location(ng-if="item.type == 'location'", location="item.location")
+  .split
+    .item(ng-repeat="item in FeedCtrl.feed | filter:{hidden:false}")
+      travel-user.user-large(ng-if="item.type == 'user'", user="item.user", ui-sref="travel.user.detail({user: item.user._id})")
+      travel-location.location-large(ng-if="item.type == 'location'", location="item.location", ui-sref="travel.location.detail({location: item.location._id})")

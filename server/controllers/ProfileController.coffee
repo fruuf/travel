@@ -28,7 +28,7 @@ api.action "auth", (data, auth) ->
     email: auth.email
     auth: auth._id
   else if data.email
-    User.findOne email: data.email
+    User.findOne email: data.email.toLowerCase()
     .then (user) ->
       if user
         auth: no
@@ -45,8 +45,7 @@ api.action "auth", (data, auth) ->
 
 api.action "update", (data, auth) ->
   throw new Error "auth" if not auth
-  delete data.admin
-  delete data.image
+
   image = no
   if data.file
     if auth.image
@@ -55,6 +54,7 @@ api.action "update", (data, auth) ->
 
   q image
   .then (image) ->
+    Api.filter data, ["name", "country", "profession", "about"]
     if image
       data.image = image
     User.update _id: auth._id, data
@@ -79,14 +79,13 @@ api.action "register", (data, auth, handshake) ->
       coords = [geo.ll[1], geo.ll[0]]
       console.log "geoCoords", coords
     User.create
-      email: data.email
+      email: data.email.toLowerCase()
       password: hash
       name: data.name
       image: image
       location: coords
 
   .then (user) ->
-
     user.token.push
       value: token
     user.save()
@@ -95,7 +94,7 @@ api.action "register", (data, auth, handshake) ->
 
 api.action "login", (data) ->
   User.findOne
-    email: data.email
+    email: data.email.toLowerCase()
   .then (user) ->
     if not user or not bcrypt.compareSync(data.password, user.password)
       throw new Error "invalid login"

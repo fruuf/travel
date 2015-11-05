@@ -1,14 +1,17 @@
 .container
-  h1 {{DetailCtrl.user.name}}
-  p {{DetailCtrl.user.description}}
-  p {{DetailCtrl.user.about}}
-  p(ng-if="DetailCtrl.user.online == true")
-    span.label.label-success Online
-  button.btn.btn-primary(ui-sref="travel.conversation.detail({user: [DetailCtrl.user._id]})") Message
+  .row
+    .col-sm-6
+      img.img-responsive.img-thumbnail(res-src="DetailCtrl.user.image")
+    .col-sm-6
+      h2 {{DetailCtrl.user.name}}
+        i.fa.fa-circle.text-success(ng-if="DetailCtrl.user.online == true")
+      p {{DetailCtrl.user.description}}
+      p {{DetailCtrl.user.about}}
+      p {{DetailCtrl.user.distance | distance}}
+      button.btn.btn-primary.btn-block(ui-sref="travel.conversation.detail({user: [DetailCtrl.user._id]})") Message
+    
 
-  h3 Places you share
-  .list-group
-    .list-group-item(ui-sref="travel.location.detail({location:location._id})", ng-repeat="location in DetailCtrl.locations")
-      h4 {{ocation.name}}
-      p {{location.address}}
-      p {{location.description}}
+.container(ng-if="DetailCtrl.locations.length")
+  h2 Locations you share
+  .split
+    travel-location.location-medium.item(ng-repeat="location in DetailCtrl.locations", location="location", ui-sref="travel.location.detail({location: location._id})")
