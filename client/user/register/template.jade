@@ -1,27 +1,24 @@
 extends ../splash
 block content
   h1 You're new!
-  p It looks like you haven't been here yet. Tell us a little bit about yourself and select a nice profile picture. You can change these details any time.
+  p It looks like you haven't been here yet. Tell us a little bit about yourself and select a nice profile picture.
   hr
   form
     .form-group
       p your name
-      input.form-control(type="text", placeholder="name", ng-model="RegisterCtrl.name", required)
+      input.form-control(type="text", placeholder="name", ng-model="RegisterCtrl.name", required, autofocus)
 
     .form-group
       p profile picture
-      .input-group(ngf-select, ngf-resize="{width:500, height:500, quality:0.95}", ng-model="RegisterCtrl.file",accept="image/*")
-        input.form-control(type="text", readonly, placeholder="choose image", ng-model="RegisterCtrl.file.name", required)
-        .input-group-btn
-          button.btn.btn-primary
-            span.glyphicon.glyphicon-search
+      div(ngf-select, ngf-resize="{width:500, height:500, quality:0.95}", ng-model="RegisterCtrl.file", accept="image/*")
+        input.form-control(type="text", readonly, placeholder="choose image", required, ng-model="RegisterCtrl.file.name")
+      
     .form-group
       p your password
       input.form-control(type="password", placeholder="password", ng-model="RegisterCtrl.password", required)
     .form-group
       p repeat your password
-      .input-group
-        input.form-control(type="password", placeholder="password repeat", ng-model="RegisterCtrl.passwordRepeat", required)
-        .input-group-btn
-          button.btn.btn-primary(ng-disabled="loading", ng-click="RegisterCtrl.continue()")
-            span.glyphicon.glyphicon-play
+      input.form-control(type="password", placeholder="password repeat", ng-model="RegisterCtrl.passwordRepeat", required)
+    .form-group
+      button.btn-splash(ng-disabled="loading", ng-click="RegisterCtrl.continue()") Register
+        i.fa.fa-check

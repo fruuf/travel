@@ -6,9 +6,8 @@ block content
   hr
   form
     .form-group
-      .input-group
-        input.form-control(type="email", placeholder="email", ng-model="UserCtrl.email", required)
-        .input-group-btn
-          button.btn.btn-primary(ng-disabled="loading", ng-click="UserCtrl.continue()") 
-            span.glyphicon.glyphicon-play
+      input.form-control(type="email", placeholder="email", ng-model="UserCtrl.email", required, autofocus)
+    .form-group
+      button.btn-splash(ng-disabled="loading", ng-click="UserCtrl.continue()") Continue
+        i.fa.fa-check
             

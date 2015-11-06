@@ -5,6 +5,7 @@
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 // @body-bg: #BB0001;
 @brand-primary: #DC403B;
+@brand-info: #F39A00;
 
 @navbar-default-color:             #eee;
 @navbar-default-bg:                @brand-primary;
@@ -101,8 +102,15 @@ body, html {
     top: 5px;
     width:200px;
     height: 200px;
+  }
+  @media (max-width: @screen-xs) {
+    min-height: 160px;
+    padding: 5px 5px 5px 165px;
+    .picture {
+      height:150px;
+      width:150px;
 
-
+    }
   }
 }
 
@@ -140,7 +148,7 @@ body, html {
   }
 
   .splash {
-    background-image: url("/images/gili.jpeg");
+    background-color: @brand-primary;
     background-size: cover;
     background-position: center center;
     width: 100vw;
@@ -157,6 +165,21 @@ body, html {
     form {
       > input, > .input-group {
         margin: 20px 0;
+      }
+    }
+    .btn-splash {
+      width:100%;
+      display: block;
+      color: #fff;
+      background: none;
+      border:none;
+      font-family: @font-family-sans-serif;
+      font-size: 14px;
+      line-height: 14px;
+      font-weight: normal;
+      text-shadow: 1px 1px 1px @gray-dark;
+      i {
+        margin: 0 0 0 0.5em;
       }
     }
   }

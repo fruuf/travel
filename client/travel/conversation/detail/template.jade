@@ -6,7 +6,7 @@
   .message-input
     form(ng-submit="DetailCtrl.submit()")
       .input-group
-        input.form-control(type="text", ng-model="DetailCtrl.message")
+        input.form-control(type="text", ng-model="DetailCtrl.message", autofocus)
         .input-group-btn
           button.btn.btn-primary(type="submit")
             span.glyphicon.glyphicon-send
