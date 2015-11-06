@@ -74,16 +74,14 @@ api.action "register", (data, auth, handshake) ->
   .then (image) ->
     coords= []
     geo = geoipLite.lookup handshake.address
-    console.log "geo", geo, handshake
     if geo
       coords = [geo.ll[1], geo.ll[0]]
-      console.log "geoCoords", coords
     User.create
       email: data.email.toLowerCase()
       password: hash
       name: data.name
       image: image
-      location: coords
+      coords: coords
 
   .then (user) ->
     user.token.push
@@ -104,9 +102,5 @@ api.action "login", (data) ->
       $push:
         token:
           value: token
-    .then ->
-      User.findOne _id: user._id
-      .then (user) ->
-        console.log token, user
     .then ->
       token: token
